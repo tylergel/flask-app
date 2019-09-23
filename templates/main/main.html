@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    </head>
+        {% block content %}
+          <body>
+            <div class = "container">
+              <div class = "row">
+                <div class = "col-md-4">
+                  <div class="card border-success mx-sm-1 p-3">
+                    <div class="text-success text-center mt-3"><h4>Cards completed</h4></div>
+                    <div class="text-success text-center mt-2"><h1>{{completed}}</h1></div>
+                  </div>
+                </div>
+                <div class = "col-md-4">
+                  <div class="card border-primary mx-sm-1 p-3">
+                    <div class="text-primary text-center mt-3"><h4>Total cards</h4></div>
+                    <div class="text-primary text-center mt-2"><h1>{{totalcards}}</h1></div>
+                  </div>
+                </div>
+                <div class = "col-md-4">
+                  <div class="card border-danger mx-sm-1 p-3" >
+                    <div class="text-danger text-center mt-3"><h4>Open cards</h4></div>
+                    <div class="text-danger text-center mt-2"><h1>{{opencards}}</h1></div>
+                  </div>
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-md-6 mt-3">
+                  <div class="card">
+                      <div class="card-body">
+                          <canvas id="chDonut1"></canvas>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-6 mt-3">
+                <div class="card">
+                  <div class = "card-header text-center">
+                    Leaderboards
+                  </div>
+                  <div class="card-body text-center">
+                      <table class = "table table-striped">
+                        <thead>
+                          <tr >
+                            <th scope="col">Name</th>
+                            <th scope="col">Ranking</th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class = "table-info">
+                            <td>help</td>
+                            <td>Mark</td>
+                          </tr>
+                          <tr class = "table-success">
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                          </tr>
+                          <tr class = "table-info">
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
+                </div>
+            </div>
+              </div>
+              <!--- {{ cards }} -->
+            </div>
+          </body>
+        {% endblock %}
+    </body>
+</html>
+<script>
+var colors = ['green','red'];
+
+/* 3 donut charts */
+var donutOptions = {
+  responsive: true,
+  title: {
+      display: true,
+      position: "top",
+      text: "Cards",
+      fontSize: 18,
+      fontColor: "#111"
+    },
+    legend: {
+      position: "bottom",
+      labels: {
+        fontColor: "#333",
+        fontSize: 16
+      }
+    }
+};
+
+// donut 1
+var cards_completed = "{{completed}}";
+var cards_open = "{{opencards}}";
+var chDonutData1 = {
+    labels: ['Cards Completed', 'Open Cards'],
+    datasets: [
+      {
+        backgroundColor: colors.slice(0,2),
+        borderWidth: [1, 1, 1, 1, 1],
+        data: [cards_completed, cards_open]
+      }
+    ]
+};
+
+var chDonut1 = document.getElementById("chDonut1");
+if (chDonut1) {
+  new Chart(chDonut1, {
+      type: 'doughnut',
+      data: chDonutData1,
+      options: donutOptions
+  });
+}
+</script>
