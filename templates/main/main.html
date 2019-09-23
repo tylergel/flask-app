@@ -3,25 +3,29 @@
     <head>
       <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
       <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+      <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </head>
         {% block content %}
           <body>
             <div class = "container">
               <div class = "row">
-                <div class = "col-md-4">
-                  <div class="card border-success mx-sm-1 p-3">
+                <div class = "col-6 col-lg-4 mt-3">
+                  <div class="card border-success  mx-sm-1 p-3">
                     <div class="text-success text-center mt-3"><h4>Cards completed</h4></div>
                     <div class="text-success text-center mt-2"><h1>{{completed}}</h1></div>
                   </div>
                 </div>
-                <div class = "col-md-4">
+                <div class = "col-6 col-lg-4 mt-3">
                   <div class="card border-primary mx-sm-1 p-3">
                     <div class="text-primary text-center mt-3"><h4>Total cards</h4></div>
                     <div class="text-primary text-center mt-2"><h1>{{totalcards}}</h1></div>
                   </div>
                 </div>
-                <div class = "col-md-4">
+                <div class = "col-6 offset-3 col-lg-4 offset-lg-0 mt-3">
                   <div class="card border-danger mx-sm-1 p-3" >
                     <div class="text-danger text-center mt-3"><h4>Open cards</h4></div>
                     <div class="text-danger text-center mt-2"><h1>{{opencards}}</h1></div>
@@ -29,14 +33,14 @@
                 </div>
               </div>
               <div class = "row">
-                <div class="col-md-6 mt-3">
+                <div class="col-12 col-lg-6 mt-3">
                   <div class="card">
                       <div class="card-body">
                           <canvas id="chDonut1"></canvas>
                       </div>
                   </div>
               </div>
-              <div class="col-md-6 mt-3">
+              <div class="col-12 col-lg-6 mt-3">
                 <div class="card">
                   <div class = "card-header text-center">
                     Leaderboards
@@ -45,31 +49,70 @@
                       <table class = "table table-striped">
                         <thead>
                           <tr >
-                            <th scope="col">Name</th>
                             <th scope="col">Ranking</th>
-
+                            <th scope="col">Name</th>
+                            <th scope="col">Cards Completed</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr class = "table-info">
-                            <td>help</td>
-                            <td>Mark</td>
-                          </tr>
+                          {% for rank in leaderboards %}
+                          {% if rank['name'] == user %}
                           <tr class = "table-success">
-                            <td>Thornton</td>
-                            <td>@fat</td>
+                            <td>{{rank['ranking']}}</td>
+                            <td>{{rank['name']}}</td>
+                            <td>{{rank['cardscompleted']}}</td>
                           </tr>
-                          <tr class = "table-info">
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                          </tr>
+                           {% else %}
+                           <tr class = "table-info">
+                             <td>{{rank['ranking']}}</td>
+                             <td>{{rank['name']}}</td>
+                             <td>{{rank['cardscompleted']}}</td>
+                           </tr>
+                          {% endif %}
+
+                          {% endfor %}
+
                         </tbody>
                       </table>
                   </div>
                 </div>
             </div>
               </div>
-              <!--- {{ cards }} -->
+              <div class = "row">
+                <div class = "col-12 col-lg-8  mt-3">
+                  <div class="card border-success mx-sm-1 p-3">
+                    <div class = "card-header text-center">
+                      Badges
+                    </div>
+                    <div class = "row">
+                    <div class="col-md-2">
+                      <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" title="Be a user for a year">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-birthday-cake fa-stack-1x fa-inverse"></i>
+                      </span>
+                    </div>
+                    <div class="col-md-2">
+                      <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" title="Show exemplary work">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-star fa-stack-1x fa-inverse"></i>
+                      </span>
+                    </div>
+                    <div class="col-md-2" style = "opacity: 0.5">
+                      <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" title="No open cards">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
+                      </span>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+                <div class = "col-6 offset-3 col-lg-4 offset-lg-0 mt-3">
+                  <div class="card border-danger mx-sm-1 p-3" >
+                    <div class="text-danger text-center mt-3"><h4>Points</h4></div>
+                    <div class="text-danger text-center mt-2"><h1>1125</h1></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </body>
         {% endblock %}
@@ -119,4 +162,7 @@ if (chDonut1) {
       options: donutOptions
   });
 }
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 </script>
