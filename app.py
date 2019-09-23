@@ -68,8 +68,11 @@ def cardsCompleted(cards)  :
 
 class Database:
     def __init__(self):
-
-        self.con = pymysql.connect(host=config.host, user=config.user, password=config.password, db=config.db, cursorclass=pymysql.cursors.
+        host=ENV['host']
+        user=ENV['user']
+        password=ENV['password']
+        db=ENV['db']
+        self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
                                    DictCursor)
         self.cur = self.con.cursor()
     def leaderboards(self):
