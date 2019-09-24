@@ -14,6 +14,8 @@ import logging
 import json
 import pymysql
 import config
+import main
+import database
 app = Flask(__name__)
 
 
@@ -26,65 +28,34 @@ app = Flask(__name__)
 
 
 # Display all things
-@app.route('/')
-def showMain():
-    return render_template('')
+
 
 @app.route('/main')
-def main():
-    cards = getAllCards()
-    completed = cardsCompleted(cards)
+def mainRender():
+    cards = main.getAllCards()
+    completed = main.cardsCompleted(cards)
     totalcards = len(cards)
     opencards = totalcards-completed
-    db = Database()
+    db = database.Database()
     leaderboards = db.leaderboards()
+    badges = db.userBadges()
+    userData = db.getUser()
+    return render_template('/main/main.html', users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, leaderboards=leaderboards, user = "tylergel")
 
-    return render_template('/main/main.html', cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, leaderboards=leaderboards, user = "tylergel")
+@app.route('/')
+def mainRenderHome():
+    return mainRender()
 
+@app.route('/challenges')
+def challengesRender():
+    db = database.Database()
+    badges = db.userBadges()
+    userData = db.getUser()
+    return render_template('/challenges/challenges.html', badges=badges, users=userData)
 
-def getAllCards() :
-    boards = requests.get("https://api.trello.com/1/members/me/boards?key=a1b402ff2cc40ab7a947993eb3a08d25&token=c8d1532f8550418cf8f334f6e6bb957353c556d6499e973cfb41df821530fd0d")
-    todos = json.loads(boards.text)
-    boardids = []
-    for todo in todos:
-        boardids.append(todo['id'])
-    cards = [];
-    for b_id in boardids :
-        url = "https://api.trello.com/1/boards/"+str(b_id)+"/cards?key=a1b402ff2cc40ab7a947993eb3a08d25&token=c8d1532f8550418cf8f334f6e6bb957353c556d6499e973cfb41df821530fd0d"
-        allCards = requests.get(url)
-        allCards = json.loads(allCards.text)
-        for card in allCards  :
-            cards.append(card)
-    return cards
-
-
-def cardsCompleted(cards)  :
-     completed  = 0;
-     for card in cards :
-         if card['dueComplete']  :
-             completed += 1
-     return(completed);
-
-
-class Database:
-    def __init__(self):
-        host=ENV['host']
-        user=ENV['user']
-        password=ENV['password']
-        db=ENV['db']
-        self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
-                                   DictCursor)
-        self.cur = self.con.cursor()
-    def leaderboards(self):
-        self.cur.execute("SELECT * FROM leaderboards ORDER BY cardsCompleted DESC")
-        result = self.cur.fetchall()
-        index = -1
-        newlist = []
-        for rank in result :
-            index = index + 1
-            if rank['name'] == 'tylergel' :
-                newlist.append(result[index-1])
-                newlist.append(result[index])
-                newlist.append(result[index+1])
-
-        return newlist
+@app.route('/admin')
+def adminRender():
+    db = database.Database()
+    badges = db.userBadges()
+    userData = db.getUser()
+    return render_template('/admin/admin.html', badges=badges, users=userData)
