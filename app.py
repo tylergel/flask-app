@@ -13,7 +13,6 @@ import string
 import logging
 import json
 import pymysql
-import config
 import main
 import database
 app = Flask(__name__)
