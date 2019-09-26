@@ -18,10 +18,10 @@ import main
 
 class Database:
     def __init__(self):
-        host = config.host
-        user = config.user
-        password=config.password
-        db=config.db
+        host = process.env.host
+        user = process.env.user
+        password=process.env.password
+        db=process.env.db
         self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
                                    DictCursor)
         self.cur = self.con.cursor()
