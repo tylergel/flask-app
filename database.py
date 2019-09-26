@@ -14,13 +14,14 @@ import logging
 import json
 import pymysql
 import main
+import os
 
 class Database:
     def __init__(self):
-        host = process.env.host
-        user = process.env.user
-        password=process.env.password
-        db=process.env.db
+        host = os.environ.get('host')
+        user = os.environ.get('user')
+        password=os.environ.get('password')
+        db=os.environ.get('db')
         self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
                                    DictCursor)
         self.cur = self.con.cursor()
