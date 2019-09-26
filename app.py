@@ -40,7 +40,18 @@ def mainRender():
     leaderboards = db.leaderboards()
     badges = db.userBadges()
     userData = db.getUser()
-    return render_template('/main/main.html', users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, leaderboards=leaderboards, user = "tylergel")
+    points = db.getPoints()
+    return render_template('/main/main.html', points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, leaderboards=leaderboards, user = "tylergel")
+
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json')
+
+@app.route('/sw.js')
+def service_worker():
+    response = make_response(send_from_directory('static', 'sw.js'))
+    response.headers['Cache-Control'] = 'no-cache'
+    return response
 
 @app.route('/')
 def mainRenderHome():
@@ -50,12 +61,45 @@ def mainRenderHome():
 def challengesRender():
     db = database.Database()
     badges = db.userBadges()
+    challenges = db.getChallenges()
     userData = db.getUser()
     return render_template('/challenges/challenges.html', badges=badges, users=userData)
 
 @app.route('/admin')
 def adminRender():
     db = database.Database()
-    badges = db.userBadges()
+    badges = db.getBadges()
     userData = db.getUser()
-    return render_template('/admin/admin.html', badges=badges, users=userData)
+    users = db.getUsers()
+    points = db.getPoints()
+    return render_template('/admin/admin.html', badges=badges, users=userData, allusers=users, points=points)
+
+@app.route('/profile')
+def profileRender():
+    return render_template('/profile/profile.html')
+
+@app.route('/deletebadge')
+def deleteBadge():
+    db = database.Database()
+    badge_id = request.args.get('data', 0, type=str)
+    db.deleteBadge(badge_id)
+    return redirect(url_for('delete'))
+
+
+@app.route('/addbadge')
+def addBadge():
+    db = database.Database()
+    icon = request.args.get('icon')
+    name = request.args.get('name')
+    points = request.args.get('points')
+    description = request.args.get('description')
+    db.addBadge(icon, name, points, description)
+    return redirect('/admin')
+
+@app.route('/addbadgetouser')
+def addBadgeToUser():
+    db = database.Database()
+    userid = request.args.get('userid')
+    badgeid = request.args.get('badgeid')
+    db.addBadgeToUser(userid, badgeid)
+    return adminRender()

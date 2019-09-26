@@ -94,7 +94,7 @@
                 <div class = "col-6 offset-3 col-lg-4 offset-lg-0 mt-3">
                   <div class="card border-danger mx-sm-1 p-3" >
                     <div class="text-danger text-center mt-3"><h4>Points</h4></div>
-                    <div class="text-danger text-center mt-2"><h1>{{users[0]['points']}}</h1></div>
+                    <div class="text-danger text-center mt-2"><h1>{{points}}</h1></div>
                   </div>
                 </div>
               </div>
@@ -102,6 +102,7 @@
           </body>
         {% endblock %}
 </html>
+ <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
 <script>
 var colors = ['green','red'];
 
@@ -149,4 +150,5 @@ if (chDonut1) {
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
+
 </script>

@@ -5,6 +5,34 @@
           <body>
             <div class = "container">
                 <div class="card col-12 mt-3">
+                  <div class = "row">
+                    <div class = "col-4">
+                    <h4>
+                    Badges
+                    </h4>
+                    </div>
+                    <div class = "col-1 offset-7">
+                      <i class="fa fa-plus fa-2x pull-right" id = "showadd"></i>
+                      </div>
+                      </div>
+                  <div class = "row" id = "add" style = "display:none">
+                    <div class = "col-3" >
+                      <input type="text" class="form-control" id = "icon" placeholder="Font awesome Icon Name">
+                    </div>
+                    <div class = "col-2">
+                    <input type="text" class="form-control" id = "name" placeholder="Badge Name">
+                      </div>
+                      <div class = "col-2">
+                        <input type="text" class="form-control" id = "points" placeholder="Points">
+                        </div>
+                        <div class = "col-3">
+                          <input type="text" class="form-control" id = "description" placeholder="Description">
+                          </div>
+                          <div class = "col-2">
+                              <i class="fa fa-plus-circle fa-2x" id = "addbadge"></i>
+                            </div>
+
+                  </div>
                 {% for badge in badges %}
 
                   <div class = "row">
@@ -24,16 +52,84 @@
                             {{badge['description']}}
                           </div>
                           <div class = "col-2">
-                              <i class="fa fa-edit"></i>
-                              <i class="fa fa-trash"></i>
+                              <i class="deletebadge  fa fa-trash"  data-badgeid={{badge['id']}}></i>
                             </div>
                   </div>
 
                 {% endfor %}
                 </div>
-                <div class="card col-12 col-lg-8 mt-3">
-                  {% for badge in badges %}
+                <div class = "row">
+                <div class="col-12 col-lg-6 mt-3">
+                  <div class="card">
+                    <div class = "card-header text-center">
+                      Edit user rewards
+                    </div>
+                    <div class="card-body text-center">
+                        <table class = "table table-striped">
+                          <thead>
+                            <tr >
+                              <th scope="col">Name</th>
+                              <th scope="col">Points</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for user in allusers %}
+                             <tr class = "table-info">
+                               <td>{{user['name']}}</td>
+                               <td>{{points}}</td>
+                             </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-12 col-lg-6 mt-3">
+                <div class="card">
+                  <div class = "card-header text-center">
+                    Editing user: {{users[0]['name']}}
+                  </div>
+                  <div class="card-body text-center">
+                    <div class = "row text-center">
+                      <h4 class = "text-info">Total points: {{ points }}<h4>
+                      </div>
+                    <div class = "row">
+                      <input type = "text" style = "display:none" id = "gettingid" value = "{{users[0]['id']}}">
+                      <div class = "col-4">
+                        User's badges:
+                        </div>
+                      <div class = "col-8">
+                        {% for badge in allusers[0]['badges'] %}
+                         <span class="fa-stack has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
+                          </span>
+                          {% endfor %}
+</div>
+                          <div class = "row">
+                            <div class = "col-10 offset-1">
+                              <label class = "col-8" for="addbadge">Add badge to user</label>
+                              <select class="col-8" id="addbadgeselect">
+                                <option>Choose badge</option>
+                                {% for badge in badges %}
+                                  <option value = {{badge['id']}}>{{badge['name']}}</option>
+                                  {% endfor %}
+                              </select>
+                              <button id = "addbadgetouser" class = "col-4 btn btn-primary mt-2">Add Badge</button>
 
+                            </div>
+                            </div>
+
+                        </div>
+
+                      </div>
+                  </div>
+                </div>
+            </div>
+            </div>
+
+                <div class="card col-12 col-lg-8 mt-3">
+                  {% for challenge in challenges %}
                     <div class = "row">
                       <div class = "col-4" >
                         <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}" {% if badge['completed'] == 0 %}style = "opacity: .5"{% endif %}>
@@ -53,5 +149,56 @@
                 </div>
               </div>
           </body>
+          {{result}}
         {% endblock %}
 </html>
+<script type=text/javascript>
+
+$( "#showadd" ).click(function() {
+  $( "#add" ).show();
+});
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  $(function() {
+      $('.deletebadge').bind('click', function() {
+        $.getJSON($SCRIPT_ROOT + '/deletebadge', {
+          data: $(this).data('badgeid')
+        }, function(data) {
+          window.location.replace("/admin");
+        });
+        window.location.replace("/admin");
+        return false;
+      });
+    });
+
+    $(function() {
+        $('#addbadge').bind('click', function() {
+          $.getJSON($SCRIPT_ROOT + '/addbadge', {
+            icon: $("#icon").val(),
+            name: $("#name").val(),
+            points: $("#points").val(),
+            description: $("#description").val()
+
+          }, function(data) {
+            window.location.replace("/admin");
+          });
+          window.location.replace("/admin");
+          return false;
+        });
+      });
+
+      $(function() {
+          $('#addbadgetouser').bind('click', function() { 
+            $.getJSON($SCRIPT_ROOT + '/addbadgetouser', {
+              userid: $("#gettingid").val(),
+              badgeid: $("#addbadgeselect"). children("option:selected"). val()
+            }, function(data) {
+              window.location.replace("/admin");
+            });
+            window.location.replace("/admin");
+            return false;
+          });
+        });
+
+
+
+</script>

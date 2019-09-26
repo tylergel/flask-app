@@ -25,20 +25,18 @@
                 {% endfor %}
                 </div>
                 <div class="card col-12 col-lg-8 mt-3">
-                  {% for badge in badges %}
+                  {% for challenge in challenges %}
 
                     <div class = "row">
                       <div class = "col-4" >
-                        <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}" {% if badge['completed'] == 0 %}style = "opacity: .5"{% endif %}>
+                        <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top">
                           <i class="fa fa-circle fa-stack-2x"></i>
                           <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
                         </span>
                       </div>
                       <div class = "col-4">
-                        {{badge['name']}}:
                         </div>
                         <div class = "col-4">
-                            {{badge['points']}}
                           </div>
                     </div>
 
