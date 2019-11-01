@@ -40,7 +40,8 @@ def mainRender():
     badges = db.userBadges()
     userData = db.getUser()
     points = db.getPoints()
-    return render_template('/main/main.html', points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, leaderboards=leaderboards, user = "tylergel")
+    members = main.getAllMembers()
+    return render_template('/main/main.html',members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, leaderboards=leaderboards, user = "tylergel")
 
 
 @app.route('/')
