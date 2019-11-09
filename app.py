@@ -49,22 +49,16 @@ def mainRender():
 @app.route('/login')
 def login():
     github = OAuth2Session('a1b402ff2cc40ab7a947993eb3a08d25')
-    authorization_url, state = github.authorization_url('https://trello.com/1/authorize?callback_method=callback&return_url=https://python-app-flask.herokuapp.com/callback&expiration=never&name=SB-Trello&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
+    authorization_url, state = github.authorization_url('https://trello.com/1/authorize?callback_method=callback&return_url=https://python-app-flask.herokuapp.com/callback&expiration=never&name=TrelloGamification&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
 
     # State is used to prevent CSRF, keep this for later.
     session['oauth_state'] = state
-    return redirect('https://trello.com/1/authorize?callback_method=callback&return_url=https://python-app-flask.herokuapp.com//callback&expiration=never&name=Trello&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
+    return redirect('https://trello.com/1/authorize?callback_method=callback&return_url=https://python-app-flask.herokuapp.com/callback&expiration=never&name=TrelloGamification&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
 
-
-
-
-@app.route("/callback")
+@app.route('/callback')
 def callback():
-    github = OAuth2Session('a1b402ff2cc40ab7a947993eb3a08d25', state=session['oauth_state'])
-    token = github.fetch_token('https://trello.com/1/OAuthGetAccessToken', client_secret='a1b402ff2cc40ab7a947993eb3a08d25',
-                               authorization_response=request.url)
+    return render_template('/main/loggedin.html', url=request.path, url2=request.url_rule)
 
-    return jsonify(github.get('https://api.github.com/user').json())
 
 @app.route('/')
 def mainRenderHome():
