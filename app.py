@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify, \
+from flask import Flask, render_template, request, session, redirect, jsonify, \
     url_for, flash
 
 # from sqlalchemy import create_engine, asc, desc, \
@@ -13,11 +13,11 @@ import string
 import logging
 import json
 import pymysql
+from requests_oauthlib import OAuth2Session
 import main
 import database
 app = Flask(__name__)
-
-
+app.secret_key = "c8d1532f8550418cf8f334f6e6bb957353c556d6499e973cfb41df821530fd0d"
 # Connect to database and create database session
 # engine = create_engine('sqlite:///flaskstarter.db')
 # Base.metadata.bind = engine
@@ -27,7 +27,6 @@ app = Flask(__name__)
 
 
 # Display all things
-
 
 @app.route('/main')
 def mainRender():
@@ -43,6 +42,29 @@ def mainRender():
     members = main.getAllMembers()
     return render_template('/main/main.html',members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, leaderboards=leaderboards, user = "tylergel")
 
+
+
+
+
+@app.route('/login')
+def login():
+    github = OAuth2Session('a1b402ff2cc40ab7a947993eb3a08d25')
+    authorization_url, state = github.authorization_url('https://trello.com/1/authorize?callback_method=postMessage&return_url=http%3A%2F%2Flocalhost%2Ftrello%2Findex.php&expiration=never&name=SB-Trello&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
+
+    # State is used to prevent CSRF, keep this for later.
+    session['oauth_state'] = state
+    return redirect('https://trello.com/1/authorize?callback_method=callback&return_url=http://127.0.0.1:5000/callback&expiration=never&name=Trello&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
+
+
+
+
+@app.route("/callback")
+def callback():
+    github = OAuth2Session('a1b402ff2cc40ab7a947993eb3a08d25', state=session['oauth_state'])
+    token = github.fetch_token('https://trello.com/1/OAuthGetAccessToken', client_secret='a1b402ff2cc40ab7a947993eb3a08d25',
+                               authorization_response=request.url)
+
+    return jsonify(github.get('https://api.github.com/user').json())
 
 @app.route('/')
 def mainRenderHome():
