@@ -18,14 +18,14 @@ import os
 
 class Database:
     def __init__(self):
-        # host = os.environ.get('host')
-        # user = os.environ.get('user')
-        # password=os.environ.get('password')
-        # db=os.environ.get('db')
-        host = "107.180.27.226"
-        user = "tylergel"
-        password = "tylergel"
-        db = "gammification"
+        host = os.environ.get('host')
+        user = os.environ.get('user')
+        password=os.environ.get('password')
+        db=os.environ.get('db')
+        # host = "107.180.27.226"
+        # user = "tylergel"
+        # password = "tylergel"
+        # db = "gammification"
         self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
                                    DictCursor)
         self.cur = self.con.cursor()
