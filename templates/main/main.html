@@ -48,7 +48,7 @@
                         </thead>
                         <tbody>
                           {% for member in members %}
-                          {% if member['username'] == user %}
+                          {% if member['username'] == username %}
                           <tr class = "table-success">
                             <td>{{member['username']}}</td>
                           </tr>

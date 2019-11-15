@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify, \
+from flask import Flask, render_template, request, redirect, session, jsonify, \
     url_for, flash
 
 import requests
@@ -7,7 +7,7 @@ import database
 
 def getBoardIdsList() :
     boards_list = database.Database().getBoards()
-    boards = requests.get("https://api.trello.com/1/members/me/boards?key=a1b402ff2cc40ab7a947993eb3a08d25&token=e9eb3fe6c9aa474cda10a77043c2ee941241ca7a7d4c218c4ea0688d29ba0624")
+    boards = requests.get("https://api.trello.com/1/members/me/boards?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('token'))
     todos = json.loads(boards.text)
     boardids = []
     for todo in todos:
@@ -19,7 +19,7 @@ def getAllMembers() :
     boardids = getBoardIdsList()
     membersList = []
     for b_id in boardids :
-        members_call = requests.get("https://api.trello.com/1/boards/ixJgFgCW/members?key=a1b402ff2cc40ab7a947993eb3a08d25&token=e9eb3fe6c9aa474cda10a77043c2ee941241ca7a7d4c218c4ea0688d29ba0624")
+        members_call = requests.get("https://api.trello.com/1/boards/ixJgFgCW/members?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('token'))
         members = json.loads(members_call.text)
         for member in members :
             membersList.append(member)
@@ -29,12 +29,19 @@ def getAllCards() :
  boardids = getBoardIdsList()
  cards = [];
  for b_id in boardids :
-     url = "https://api.trello.com/1/boards/"+str(b_id)+"/cards?key=a1b402ff2cc40ab7a947993eb3a08d25&token=e9eb3fe6c9aa474cda10a77043c2ee941241ca7a7d4c218c4ea0688d29ba0624"
+     url = "https://api.trello.com/1/boards/"+str(b_id)+"/cards?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('token')
      allCards = requests.get(url)
      allCards = json.loads(allCards.text)
      for card in allCards  :
          cards.append(card)
  return cards
+
+def cardsAssigned(cards) :
+  cardsAssigned = [];
+  for card in cards :
+      if session.get('id') in card['idMembers'] :
+        cardsAssigned.append(card)
+  return cardsAssigned
 
 
 def cardsCompleted(cards)  :

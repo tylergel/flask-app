@@ -29,28 +29,28 @@ class Database:
         self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
                                    DictCursor)
         self.cur = self.con.cursor()
-    def leaderboards(self):
-        self.cur.execute("SELECT * FROM leaderboards ORDER BY cardsCompleted DESC")
+    def insert(self, statement) :
+        res = self.cur.execute(statement)
+        self.con.commit()
+        return res
+    def select(self, statement) :
+        self.cur.execute(statement)
+        result = self.cur.fetchone()
+        return result
+    def selectall(self, statement) :
+        self.cur.execute(statement)
         result = self.cur.fetchall()
-        index = -1
-        newlist = []
-        for rank in result :
-            index = index + 1
-            if rank['name'] == 'tylergel' :
-                newlist.append(result[index-1])
-                newlist.append(result[index])
-                newlist.append(result[index+1])
-        return newlist
-    def userBadges(self):
-        self.cur.execute("SELECT * FROM user_badges INNER JOIN badges ON user_badges.badge_id = badges.id WHERE account_id = 1")
+        return result
+    def userBadges(self, userid):
+        self.cur.execute("SELECT * FROM user_badges INNER JOIN badges ON user_badges.badge_id = badges.id WHERE account_id = " + str(userid))
         result = self.cur.fetchall()
         return result
     def getBadges(self):
         self.cur.execute("SELECT * FROM badges")
         result = self.cur.fetchall()
         return result
-    def getUser(self):
-        self.cur.execute("SELECT * FROM users WHERE id = 1")
+    def getUser(self, userid):
+        self.cur.execute("SELECT * FROM users WHERE id = "+str(userid))
         result = self.cur.fetchall()
         return result
     def getUsers(self):
@@ -60,7 +60,7 @@ class Database:
         for user in result :
             newuser = []
             newuser = user
-            newuser['badges'] = self.userBadges()
+            newuser['badges'] = self.userBadges(user['id'])
             newresult.append(newuser)
         return newresult
     def getChallenges(self):
@@ -76,11 +76,15 @@ class Database:
     def addBadgeToUser(self, userid, badgeid):
         self.cur.execute("INSERT INTO user_badges (account_id, badge_id, completed) VALUES ('"+userid+"', '"+badgeid+"', 1)")
         return ""
-    def getPoints(self):
-        self.cur.execute("SELECT SUM(points) as total FROM user_badges INNER JOIN badges ON user_badges.badge_id = badges.id WHERE account_id = 1 AND completed =1")
+    def getPoints(self, userid):
+        self.cur.execute("SELECT SUM(points) as total FROM user_badges INNER JOIN badges ON user_badges.badge_id = badges.id WHERE account_id = '"+str(userid)+"' AND completed =1")
         result = self.cur.fetchall()
         return result[0]['total']
-
+    def updateUser(self, user, memberid, token) :
+        self.cur.execute("INSERT INTO users (name, memberid, token) VALUES ('"+user+"', '"+memberid+"', '"+token+"')")
+        self.cur.execute("SELECT * from users WHERE name = '"+user+"'")
+        result = self.cur.fetchall()
+        return result[0]['id']
     def getBoards(self) :
         self.cur.execute("SELECT url FROM company_boards WHERE 1")
         result = self.cur.fetchall()

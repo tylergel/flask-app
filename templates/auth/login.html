@@ -1,0 +1,21 @@
+    {% include 'base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="login-form">
+        <form method="post">
+            <h2 class="text-center">Log in </h2>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Username" id="username" name="username" required="required">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" id="password" name="password" required="required">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-outline-success btn-block">Log in</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

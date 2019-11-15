@@ -1,12 +1,6 @@
-from flask import Flask, render_template, request, session, redirect, jsonify, \
+from flask import Flask,Blueprint, render_template, request, session, redirect, jsonify, \
     url_for, flash
 
-# from sqlalchemy import create_engine, asc, desc, \
-#     func, distinct
-# from sqlalchemy.orm import sessionmaker
-# from sqlalchemy.ext.serializer import loads, dumps
-
-# from database_setup import Base, Things
 import requests
 import random
 import string
@@ -14,51 +8,51 @@ import logging
 import json
 import pymysql
 from requests_oauthlib import OAuth2Session
+from flask_oauth import OAuth
 import main
 import database
 app = Flask(__name__)
 app.secret_key = "c8d1532f8550418cf8f334f6e6bb957353c556d6499e973cfb41df821530fd0d"
-# Connect to database and create database session
-# engine = create_engine('sqlite:///flaskstarter.db')
-# Base.metadata.bind = engine
-
-# DBSession = sessionmaker(bind=engine)
-# session = DBSession()
 
 
-# Display all things
+import auth
+app.register_blueprint(auth.bp, url_prefix='/auth')
+@app.route('/')
+def start():
+    callback()
+    return mainRender()
 
 @app.route('/main')
 def mainRender():
-    cards = main.getAllCards()
+    cards = main.cardsAssigned(main.getAllCards())
     completed = main.cardsCompleted(cards)
     totalcards = len(cards)
     opencards = totalcards-completed
     db = database.Database()
-    leaderboards = db.leaderboards()
-    badges = db.userBadges()
-    userData = db.getUser()
-    points = db.getPoints()
+    badges = db.userBadges(session.get('userid'))
+    userData = db.getUser(session.get('userid'))
+    points = db.getPoints(session.get('userid'))
     members = main.getAllMembers()
-    return render_template('/main/main.html',members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, leaderboards=leaderboards, user = "tylergel")
+    return render_template('/main/main.html', fff = session, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('username'))
 
+# @app.route('/login')
+# def login():
+#     github = OAuth2Session('a1b402ff2cc40ab7a947993eb3a08d25')
+#     authorization_url, state = github.authorization_url('https://trello.com/1/authorize?callback_method=callback&return_url=localhost/loggedin&expiration=never&name=TrelloGamification&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
+#     session['oauth_state'] = state
+#     return redirect('https://trello.com/1/authorize?callback_method=callback&return_url=localhost/loggedin/&expiration=never&name=TrelloGamification&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
 
-
-
-
-@app.route('/login')
-def login():
-    github = OAuth2Session('a1b402ff2cc40ab7a947993eb3a08d25')
-    authorization_url, state = github.authorization_url('https://trello.com/1/authorize?callback_method=callback&return_url=https://python-app-flask.herokuapp.com/callback&expiration=never&name=TrelloGamification&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
-
-    # State is used to prevent CSRF, keep this for later.
-    session['oauth_state'] = state
-    return redirect('https://trello.com/1/authorize?callback_method=callback&return_url=https://python-app-flask.herokuapp.com/callback&expiration=never&name=TrelloGamification&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
-
-@app.route('/callback')
+@app.route('/loggedin')
 def callback():
-    return render_template('/main/loggedin.html', url=request.path, url2=request.url_rule)
-
+    token = 'c8d1532f8550418cf8f334f6e6bb957353c556d6499e973cfb41df821530fd0d'
+    session['token'] = token
+    members = requests.get("https://api.trello.com/1/members/me/?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('token'))
+    member = json.loads(members.text)
+    session['id'] = member['id']
+    session['username'] = member['username']
+    userid = database.Database().updateUser(member['username'], member['id'], token)
+    session['userid'] = userid
+    return mainRender()
 
 @app.route('/')
 def mainRenderHome():
@@ -67,18 +61,18 @@ def mainRenderHome():
 @app.route('/challenges')
 def challengesRender():
     db = database.Database()
-    badges = db.userBadges()
+    badges = db.userBadges(session.get('userid'))
     challenges = db.getChallenges()
-    userData = db.getUser()
+    userData = db.getUser(session.get('userid'))
     return render_template('/challenges/challenges.html', badges=badges, users=userData)
 
 @app.route('/admin')
 def adminRender():
     db = database.Database()
     badges = db.getBadges()
-    userData = db.getUser()
+    userData = db.getUser(session.get('userid'))
     users = db.getUsers()
-    points = db.getPoints()
+    points = db.getPoints(session.get('userid'))
     return render_template('/admin/admin.html', badges=badges, users=userData, allusers=users, points=points)
 
 @app.route('/profile')
