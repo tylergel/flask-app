@@ -8,7 +8,6 @@ import logging
 import json
 import pymysql
 from requests_oauthlib import OAuth2Session
-from flask_oauth import OAuth
 import main
 import database
 app = Flask(__name__)
