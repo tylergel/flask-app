@@ -16,6 +16,8 @@ app.secret_key = "c8d1532f8550418cf8f334f6e6bb957353c556d6499e973cfb41df821530fd
 
 import auth
 app.register_blueprint(auth.bp, url_prefix='/auth')
+import profiles
+app.register_blueprint(profiles.bp, url_prefix='/profiles')
 @app.route('/')
 def start():
     callback()
@@ -32,7 +34,7 @@ def mainRender():
     userData = db.getUser(session.get('userid'))
     points = db.getPoints(session.get('userid'))
     members = main.getAllMembers()
-    return render_template('/main/main.html', fff = session, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('username'))
+    return render_template('/main/main.html', fff=session, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('username'))
 
 # @app.route('/login')
 # def login():

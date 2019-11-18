@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+      {% include 'base.html' %}
+        {% block content %}
+
+          <body>
+
+            <div class = "container">
+              <div class = "row"> 
+                <form action="" method = "POST">
+
+                  {% for app in apps %}
+                  <div class="form-group">
+                    <div class = "row">
+                      <div class = "col-12">
+                        <div class = "col-3"> {{  app['app']}}:</div>
+                        <div class = "col-9"><input type="text" name ="{{app['app']}}" class="form-control" id="{{ app['id']}}"></div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+
+                  <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+
+              </div>
+            </div>
+          </body>
+        {% endblock %}
+</html>
