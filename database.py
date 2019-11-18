@@ -92,3 +92,7 @@ class Database:
         for board in result :
             boards.append(board['url'])
         return boards
+    def getTrelloToken(self, user_id) :
+        self.cur.execute("SELECT * from user_tokens where app_id='{}' and user_id='{}'".format('1', user_id))
+        result = self.cur.fetchall()
+        return result[0]['token']

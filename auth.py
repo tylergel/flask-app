@@ -6,6 +6,8 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 import database
+import requests
+import json
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -80,6 +82,13 @@ def load_logged_in_user():
         session['user'] = database.Database().select(
             "SELECT * FROM users WHERE id = '{}'".format(user_id)
         )
+        db = database.Database()
+        session['trellotoken'] = db.getTrelloToken(session.get('user_id'))
+        members = requests.get("https://api.trello.com/1/members/me/?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('trellotoken'))
+        member = json.loads(members.text)
+        session['id'] = member['id']
+        userid = database.Database().updateUser(member['username'], member['id'], session.get('trellotoken'))
+        session['userid'] = userid
 
 
 @bp.route('/logout')

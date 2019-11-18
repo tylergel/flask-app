@@ -34,7 +34,7 @@ def mainRender():
     userData = db.getUser(session.get('userid'))
     points = db.getPoints(session.get('userid'))
     members = main.getAllMembers()
-    return render_template('/main/main.html', fff=session, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('username'))
+    return render_template('/main/main.html', fff=session, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('user'))
 
 # @app.route('/login')
 # def login():
@@ -42,18 +42,6 @@ def mainRender():
 #     authorization_url, state = github.authorization_url('https://trello.com/1/authorize?callback_method=callback&return_url=localhost/loggedin&expiration=never&name=TrelloGamification&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
 #     session['oauth_state'] = state
 #     return redirect('https://trello.com/1/authorize?callback_method=callback&return_url=localhost/loggedin/&expiration=never&name=TrelloGamification&response_type=token&key=a1b402ff2cc40ab7a947993eb3a08d25')
-
-@app.route('/loggedin')
-def callback():
-    token = 'c8d1532f8550418cf8f334f6e6bb957353c556d6499e973cfb41df821530fd0d'
-    session['token'] = token
-    members = requests.get("https://api.trello.com/1/members/me/?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('token'))
-    member = json.loads(members.text)
-    session['id'] = member['id']
-    session['username'] = member['username']
-    userid = database.Database().updateUser(member['username'], member['id'], token)
-    session['userid'] = userid
-    return mainRender()
 
 @app.route('/')
 def mainRenderHome():

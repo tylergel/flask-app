@@ -7,7 +7,7 @@ import database
 
 def getBoardIdsList() :
     boards_list = database.Database().getBoards()
-    boards = requests.get("https://api.trello.com/1/members/me/boards?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('token'))
+    boards = requests.get("https://api.trello.com/1/members/me/boards?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('trellotoken'))
     todos = json.loads(boards.text)
     boardids = []
     for todo in todos:
@@ -19,7 +19,7 @@ def getAllMembers() :
     boardids = getBoardIdsList()
     membersList = []
     for b_id in boardids :
-        members_call = requests.get("https://api.trello.com/1/boards/ixJgFgCW/members?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('token'))
+        members_call = requests.get("https://api.trello.com/1/boards/ixJgFgCW/members?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('trellotoken'))
         members = json.loads(members_call.text)
         for member in members :
             membersList.append(member)
@@ -29,7 +29,7 @@ def getAllCards() :
  boardids = getBoardIdsList()
  cards = [];
  for b_id in boardids :
-     url = "https://api.trello.com/1/boards/"+str(b_id)+"/cards?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('token')
+     url = "https://api.trello.com/1/boards/"+str(b_id)+"/cards?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('trellotoken')
      allCards = requests.get(url)
      allCards = json.loads(allCards.text)
      for card in allCards  :
