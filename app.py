@@ -20,7 +20,6 @@ import profiles
 app.register_blueprint(profiles.bp, url_prefix='/profiles')
 @app.route('/')
 def start():
-    callback()
     return mainRender()
 
 @app.route('/main')
@@ -30,9 +29,9 @@ def mainRender():
     totalcards = len(cards)
     opencards = totalcards-completed
     db = database.Database()
-    badges = db.userBadges(session.get('userid'))
-    userData = db.getUser(session.get('userid'))
-    points = db.getPoints(session.get('userid'))
+    badges = db.userBadges(session.get('user_id'))
+    userData = db.getUser(session.get('user_id'))
+    points = db.getPoints(session.get('user_id'))
     members = main.getAllMembers()
     return render_template('/main/main.html', fff=session, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('user'))
 
@@ -50,18 +49,18 @@ def mainRenderHome():
 @app.route('/challenges')
 def challengesRender():
     db = database.Database()
-    badges = db.userBadges(session.get('userid'))
+    badges = db.userBadges(session.get('user_id'))
     challenges = db.getChallenges()
-    userData = db.getUser(session.get('userid'))
+    userData = db.getUser(session.get('user_id'))
     return render_template('/challenges/challenges.html', badges=badges, users=userData)
 
 @app.route('/admin')
 def adminRender():
     db = database.Database()
     badges = db.getBadges()
-    userData = db.getUser(session.get('userid'))
+    userData = db.getUser(session.get('user_id'))
     users = db.getUsers()
-    points = db.getPoints(session.get('userid'))
+    points = db.getPoints(session.get('user_id'))
     return render_template('/admin/admin.html', badges=badges, users=userData, allusers=users, points=points)
 
 @app.route('/profile')

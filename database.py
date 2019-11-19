@@ -80,11 +80,6 @@ class Database:
         self.cur.execute("SELECT SUM(points) as total FROM user_badges INNER JOIN badges ON user_badges.badge_id = badges.id WHERE account_id = '"+str(userid)+"' AND completed =1")
         result = self.cur.fetchall()
         return result[0]['total']
-    def updateUser(self, user, memberid, token) :
-        self.cur.execute("INSERT INTO users (name, memberid, token) VALUES ('"+user+"', '"+memberid+"', '"+token+"')")
-        self.cur.execute("SELECT * from users WHERE name = '"+user+"'")
-        result = self.cur.fetchall()
-        return result[0]['id']
     def getBoards(self) :
         self.cur.execute("SELECT url FROM company_boards WHERE 1")
         result = self.cur.fetchall()
