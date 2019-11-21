@@ -31,9 +31,12 @@ def mainRender():
     db = database.Database()
     badges = db.userBadges(session.get('user_id'))
     userData = db.getUser(session.get('user_id'))
-    points = db.getPoints(session.get('user_id'))
+    points = db.getPointsOfUser(session.get('user_id'))
+    users=db.getUsers()
+    for index, user in enumerate(users) :
+        users[index]['rank'] = (index + 1)
     members = main.getAllMembers()
-    return render_template('/main/main.html', fff=session, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('user'))
+    return render_template('/main/main.html', allusers=users, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('user'))
 
 # @app.route('/login')
 # def login():
@@ -60,8 +63,17 @@ def adminRender():
     badges = db.getBadges()
     userData = db.getUser(session.get('user_id'))
     users = db.getUsers()
-    points = db.getPoints(session.get('user_id'))
-    return render_template('/admin/admin.html', badges=badges, users=userData, allusers=users, points=points)
+    points = db.getPointsOfUser(session.get('user_id'))
+    boards = db.getBoards()
+    lists = main.getLists()
+    completed_lists = db.getCompletedLists()
+    points_distribution = db.getPointsDistribution()
+    currentuser = []
+    user_id = request.args.get('user_id')
+    for user in users :
+        if user_id == str(user['id']) :
+            currentuser = user
+    return render_template('/admin/admin.html', points_distribution=points_distribution, currentuser=currentuser, completed_lists=completed_lists, lists=lists, boards=boards,trellousername=session.get('trellousername'), badges=badges, users=userData, allusers=users, points=points)
 
 @app.route('/profile')
 def profileRender():
@@ -74,6 +86,19 @@ def deleteBadge():
     db.deleteBadge(badge_id)
     return redirect(url_for('delete'))
 
+@app.route('/deleteboard')
+def deleteBoard():
+    db = database.Database()
+    board_id = request.args.get('data', 0, type=str)
+    db.deleteBoard(board_id)
+    return redirect(url_for('delete'))
+
+@app.route('/deletelist')
+def deleteList():
+    db = database.Database()
+    list_id = request.args.get('data', 0, type=str)
+    db.deleteList(list_id)
+    return redirect(url_for('delete'))
 
 @app.route('/addbadge')
 def addBadge():
@@ -83,6 +108,28 @@ def addBadge():
     points = request.args.get('points')
     description = request.args.get('description')
     db.addBadge(icon, name, points, description)
+    return redirect('/admin')
+
+@app.route('/addlist')
+def addList():
+    db = database.Database()
+    listname = request.args.get('listname')
+    listid = request.args.get('listid')
+    db.addList(listname, listid)
+    return redirect('/admin')
+
+@app.route('/addpointsdist')
+def addPointsDist():
+    db = database.Database()
+    ppc = request.args.get('ppc')
+    db.addPointsDist(ppc)
+    return redirect('/admin')
+
+@app.route('/addboard')
+def addBoard():
+    db = database.Database()
+    boardid = request.args.get('boardid')
+    db.addBoard(boardid)
     return redirect('/admin')
 
 @app.route('/addbadgetouser')

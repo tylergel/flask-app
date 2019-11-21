@@ -43,20 +43,24 @@
                       <table class = "table table-striped">
                         <thead>
                           <tr >
+                            <th scope="col">Rank</th>
                             <th scope="col">Name</th>
+                            <th scope="col">Points</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {% for member in members %}
-                          {% if member['username'] == username %}
+                          {% for member in allusers %}
+                          {% if member['username'] == username['username'] %}
                           <tr class = "table-success">
+                            <td>{{member['rank']}}</td>
                             <td>{{member['username']}}</td>
-                          </tr>
                            {% else %}
                            <tr class = "table-info">
+                             <td>{{member['rank']}}</td>
                              <td>{{member['username']}}</td>
-                           </tr>
                           {% endif %}
+                            <td>{{member['points']}}</td>
+                          </tr>
                           {% endfor %}
                         </tbody>
                       </table>

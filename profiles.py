@@ -19,6 +19,9 @@ def profile():
     user = db.selectall(
         "SELECT * FROM users WHERE id = '{}'".format(session.get('user_id'))
     )
+    tokenlist = {}
+    for app in apps :
+        tokenlist[app['app']] =session.get(app['app'])
     if request.method == 'POST':
         for app in apps :
             if  request.form[app['app']]:
@@ -35,7 +38,7 @@ def profile():
                     )
 
 
-        return render_template('profiles/profile.html',apps=apps, fff=session, user=user)
+        return render_template('profiles/profile.html',tokenlist=tokenlist, apps=apps,  user=user)
 
 
-    return render_template('profiles/profile.html',apps=apps, fff=session, user=user)
+    return render_template('profiles/profile.html',tokenlist=tokenlist, apps=apps,  user=user)

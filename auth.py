@@ -83,10 +83,12 @@ def load_logged_in_user():
             "SELECT * FROM users WHERE id = '{}'".format(user_id)
         )
         db = database.Database()
-        session['trellotoken'] = db.getTrelloToken(session.get('user_id'))
-        members = requests.get("https://api.trello.com/1/members/me/?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('trellotoken'))
+        session['trello'] = db.getTrelloToken(session.get('user_id'))
+        members = requests.get("https://api.trello.com/1/members/me/?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('trello'))
         member = json.loads(members.text)
+        session['trellousername'] = member['username']
         session['id'] = member['id']
+
 
 @bp.route('/logout')
 def logout():
