@@ -3,6 +3,7 @@
       {% include 'base.html' %}
         {% block content %}
           <body>
+
             <div class = "container">
                 <div class = "card mt-3">
                   <div class = "card-header">
@@ -15,10 +16,18 @@
                         {{  app['app']}} token:
                       </div>
                       <div class = "col-lg-4 col-12">
-                        <input type="text" name ="{{app['app']}}" value = "{{tokenlist[app['app']]}}" class="form-control" id="{{ app['id']}}">
+                        <input type="text" name ="{{app['app']}}"
+                        value =
+                        {% if user['username'] == "admin" %}
+                          "hidden"
+                        {% else %}
+                          "{{tokenlist[app['app']]}}"
+                        {% endif %}
+                        class="form-control" id="{{ app['id']}}"
+                        >
                       </div>
                       <div class = "col-lg-5 col-12">
-                        <a href = "{{ app['tokenurl']}}">Link for trello token (Copy and paste it here)</a>
+                        <a href = "{{ app['tokenurl']}}" target="_blank">Link for trello token (Copy and paste it here)</a>
                       </div>
                     </div>
                   </div>

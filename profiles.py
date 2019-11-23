@@ -37,8 +37,4 @@ def profile():
                         "UPDATE user_tokens SET token = '{}' WHERE app_id ='{}' and user_id='{}'".format(request.form[app['app']], app['id'], session.get('user_id'))
                     )
 
-
-        return render_template('profiles/profile.html',tokenlist=tokenlist, apps=apps,  user=user)
-
-
-    return render_template('profiles/profile.html',tokenlist=tokenlist, apps=apps,  user=user)
+    return render_template('profiles/profile.html',tokenlist=tokenlist, apps=apps,  user=user[0])

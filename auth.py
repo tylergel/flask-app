@@ -65,10 +65,8 @@ def login():
         if error is None:
             session.clear()  # stores user data into an encrypted cookie
             session['user_id'] = user['id']
-            return redirect(url_for('main'))
-
+            return redirect(url_for('mainRender'))
         flash(error)
-
     return render_template('auth/login.html')
 
 
@@ -83,7 +81,10 @@ def load_logged_in_user():
             "SELECT * FROM users WHERE id = '{}'".format(user_id)
         )
         db = database.Database()
-        session['trello'] = db.getTrelloToken(session.get('user_id'))
+        trellotoken = db.getTrelloToken(session.get('user_id'))
+        session['trello'] = trellotoken
+        if(trellotoken == "" or trellotoken is None) :
+            return
         members = requests.get("https://api.trello.com/1/members/me/?key=a1b402ff2cc40ab7a947993eb3a08d25&token="+session.get('trello'))
         member = json.loads(members.text)
         session['trellousername'] = member['username']
@@ -93,7 +94,7 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('homePages.homePage'))
+    return redirect(url_for('auth.login'))
 
 
 def login_required(view):

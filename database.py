@@ -18,14 +18,11 @@ import os
 
 class Database:
     def __init__(self):
-        # host = os.environ.get('host')
-        # user = os.environ.get('user')
-        # password=os.environ.get('password')
-        # db=os.environ.get('db')
-        host = "107.180.27.226"
-        user = "tylergel"
-        password = "tylergel"
-        db = "gammification"
+        host = os.environ.get('host')
+        user = os.environ.get('user')
+        password=os.environ.get('password')
+        db=os.environ.get('db')
+
         self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
                                    DictCursor)
         self.cur = self.con.cursor()
@@ -107,8 +104,10 @@ class Database:
             boards.append(board_array)
         return boards
     def getTrelloToken(self, user_id) :
-        self.cur.execute("SELECT * from user_tokens where app_id='{}' and user_id='{}'".format('1', user_id))
+        rows = self.cur.execute("SELECT * from user_tokens where app_id='{}' and user_id='{}'".format('1', user_id))
         result = self.cur.fetchall()
+        if rows < 1 :
+            return ""
         return result[0]['token']
     def getCompletedLists(self) :
         self.cur.execute("SELECT * from completed_lists")
@@ -120,6 +119,12 @@ class Database:
         user_badges_points = result[0]['total']
         completed = main.cardsCompleted(main.cardsAssigned(main.getAllCards()))
         points_distribution = Database().getPointsDistribution()
+        if completed is None :
+            completed = 0
+        if user_badges_points is None :
+            user_badges_points = 0
+        if points_distribution['ppc'] is None :
+            points_distribution['ppc'] = 0
         completed_points = int(points_distribution['ppc']) * int(completed)
         total_points = int(completed_points) + int(user_badges_points)
         self.cur.execute("UPDATE users SET points= "+str(total_points)+" WHERE id = '"+str(userid)+"'")

@@ -67,5 +67,4 @@ def cardsCompleted(cards)  :
           completed += 1
       elif card['idList'] in completed_lists :
           completed += 1
-
   return(completed);
