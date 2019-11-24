@@ -4,8 +4,8 @@
         {% block content %}
           <body>
             <div class = "container">
-              <div class = "row mt-2">
-              <div class = "card col-6">
+              <div class = "row mt-3">
+              <div class = "card col-12">
                 <div class = "card-header">
                   Boards to track
                 </div>
@@ -13,55 +13,56 @@
                   {% for board in boards %}
                     <div class = "row">
                       <i class="deleteboard text-danger fa fa-minus-circle fa-2x" data-boardid={{board[0]}}></i>
-                          {{ board[1] }}
+                      <div class = "ml-3">  {{ board[1] }} </div>
                     </div>
                   {% endfor %}
                     <div class = "row">
                       <i class="addboard text-success fa fa-plus-circle fa-2x"></i>
-                      <input type="text" id="addboardid" placeholder="Board URL"  >
+                      <div class = "ml-3"> <input type="text" class = "col-12" id="addboardid" placeholder="Board URL"  ></div>
                     </div>
                     <div class = "text-info">View your boards at https://trello.com/{{trellousername}}/boards</div>
                 </div>
               </div>
-              <div class = "card col-6">
+            </div>
+            <div class = "row">
+              <div class = "card col-lg-6 col-12 mt-3">
                 <div class = "card-header">
                   Lists for completeness
                 </div>
                 <div class = "card-body">
                   {% for completed_list in completed_lists %}
-                    <div class = "row"><i class="deletelist text-danger fa fa-minus-circle fa-2x" data-listid={{completed_list['id']}}></i><div class = " col-6 bg-success text-center">{{completed_list['name']}}</div></div>
+                    <div class = "row">
+                      <i class="deletelist text-danger fa fa-minus-circle fa-2x" data-listid={{completed_list['id']}}></i>
+                      <div class = "card border col-4 bg-success text-center ml-2 text-white">{{completed_list['name']}}</div>
+                    </div>
                   {% endfor %}
-                  <i class="addlist text-success fa fa-plus-circle fa-2x"></i>
-                  <select id = "addlistname" class = "mt-2">
-                    <option>Select a list to add</option>
-                    {% for list in lists %}
-                    <option value = {{list['id']}}>{{list['name']}}</option>
-                    {% endfor %}
-                  </select>
+                  <div class = "row">
+                    <i class="addlist text-success fa fa-plus-circle fa-2x"></i>
+                    <select id = "addlistname" class = "mt-2 ml-2">
+                      <option>Select a list to add</option>
+                      {% for list in lists %}
+                      <option value = {{list['id']}}>{{list['name']}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class = "row">
-              <div class = "card col-6">
+              <div class = "card col-lg-6 col-12 mt-3">
                 <div class = "card-header">
                   Point distribution
                 </div>
-                <div class = "card-body">
+                <div class = "card-body text-center ">
                   <div class = "row">
-                    Each completed card: <input id = "ppc" type="text" value = {{points_distribution['ppc']}} placeholder="100 (points per card)">
+                    Points each completed card count as: <input class = "ml-2 text-center" id = "ppc" type="text" value = {{points_distribution['ppc']}} placeholder="100 (points per card)">
                   </div>
-                  <div class = "btn btn-primary" id = "update_points">Update</div>
+                  <div class = "btn btn-primary mt-2" id = "update_points">Update</div>
                 </div>
               </div>
             </div>
                 <div class="card col-12 mt-3">
-                  <div class = "row">
-                    <div class = "col-4">
-                      <h4>
+                  <div class = "row card-header">
+                    <div class = "col-12">
                         Badges
-                      </h4>
-                    </div>
-                    <div class = "col-1 offset-7">
                       <i class="fa fa-plus fa-2x pull-right" id = "showadd"></i>
                     </div>
                   </div>
