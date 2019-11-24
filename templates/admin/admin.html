@@ -66,7 +66,7 @@
                       <i class="fa fa-plus fa-2x pull-right" id = "showadd"></i>
                     </div>
                   </div>
-                  <div class = "row" id = "add" style = "display:none">
+                  <div class = "row mt-2" id = "add" style = "display:none">
                     <div class = "col-3" >
                       <input type="text" class="form-control" id = "icon" placeholder="Font awesome Icon Name">
                     </div>
@@ -76,17 +76,31 @@
                     <div class = "col-2">
                       <input type="text" class="form-control" id = "points" placeholder="Points">
                     </div>
-                    <div class = "col-3">
+                    <div class = "col-2">
                       <input type="text" class="form-control" id = "description" placeholder="Description">
                     </div>
                     <div class = "col-2">
+                      <select id="color">
+                        <option>Select color</option>
+                        <option value="black">Black</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="orange">Orange</option>
+                        <option value="red">Red</option>
+                        <option value="pink">Pink</option>
+                        <option value="purple">Purple</option>
+                        <option value="yellow">Yellow</option>
+                      </select>
+                    </div>
+                    <div class = "col-1">
                       <i class="fa fa-plus-circle fa-2x" id = "addbadge"></i>
                     </div>
                   </div>
+
                 {% for badge in badges %}
                   <div class = "row">
                     <div class = "col-3" >
-                      <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top">
+                      <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" style = "color: {{badge['color']}}">
                         <i class="fa fa-circle fa-stack-2x"></i>
                         <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
                       </span>
@@ -149,7 +163,7 @@
                         </div>
                       <div class = "col-8">
                         {% for badge in currentuser['badges'] %}
-                         <span class="fa-stack has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}">
+                         <span class="fa-stack has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}"  style = "color: {{badge['color']}}">
                             <i class="fa fa-circle fa-stack-2x"></i>
                             <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
                           </span>
@@ -164,13 +178,11 @@
                                   <option value = {{badge['id']}}>{{badge['name']}}</option>
                                   {% endfor %}
                               </select>
-                              <button id = "addbadgetouser" class = "col-4 btn btn-primary mt-2">Add Badge</button>
-
+                              <button id = "addbadgetouser" class = " col-4 btn btn-primary mt-2">Add Badge</button>
+                              <button id = "clearuserbadges" class = " col-12 btn btn-danger mt-2">Clear Badges from user</button>
                             </div>
                             </div>
-
                         </div>
-
                       </div>
                   </div>
                 </div>
@@ -209,7 +221,7 @@ $( "#showadd" ).click(function() {
   $(function() {
       $('.deletebadge').bind('click', function() {
         $.getJSON($SCRIPT_ROOT + '/deletebadge', {
-          data: $(this).data('board')
+          data: $(this).data('badgeid')
         }, function(data) {
           window.location.replace("/admin");
         });
@@ -224,7 +236,8 @@ $( "#showadd" ).click(function() {
             icon: $("#icon").val(),
             name: $("#name").val(),
             points: $("#points").val(),
-            description: $("#description").val()
+            description: $("#description").val(),
+            color: $("#color").val(),
 
           }, function(data) {
             window.location.replace("/admin");
@@ -236,13 +249,14 @@ $( "#showadd" ).click(function() {
 
       $(function() {
           $('#addbadgetouser').bind('click', function() {
+            userid =$("#gettingid").val(),
             $.getJSON($SCRIPT_ROOT + '/addbadgetouser', {
-              userid: $("#gettingid").val(),
+              userid: userid,
               badgeid: $("#addbadgeselect"). children("option:selected"). val()
             }, function(data) {
-              window.location.replace("/admin");
+              window.location.replace("/admin?user_id"+userid);
             });
-            window.location.replace("/admin");
+            window.location.replace("/admin?user_id="+userid);
             return false;
           });
         });
@@ -322,4 +336,16 @@ $(function() {
       return false;
     });
   });
-</script>
+  $(function() {
+  $('#clearuserbadges').bind('click', function() {
+    userid =$("#gettingid").val();
+    $.getJSON($SCRIPT_ROOT + '/clearuserbadges', {
+      user_id: userid,
+    }, function(data) {
+      window.location.replace("/admin?user_id="+userid);
+    });
+    window.location.replace("/admin?user_id="+userid);
+    return false;
+  });
+});
+                  </script>

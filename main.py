@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, session, jsonify, \
 import requests
 import json
 import database
-
+from datetime import datetime, timedelta
 def getBoardIdsList() :
     boards_list = database.Database().getBoards()
     boards_list_url = []
@@ -56,8 +56,8 @@ def getLists() :
             lists.append(list)
     return lists
 
-def cardsCompleted(cards)  :
-  completed  = 0;
+def cardsCompleted(cards) :
+  completed  = 0
   lists = database.Database().getCompletedLists()
   completed_lists = []
   for completed_list in lists :
@@ -67,4 +67,21 @@ def cardsCompleted(cards)  :
           completed += 1
       elif card['idList'] in completed_lists :
           completed += 1
-  return(completed);
+  return(completed)
+
+def cardsCompletedList(cards) :
+    completed  = []
+    lists = database.Database().getCompletedLists()
+    completed_lists = []
+    for completed_list in lists :
+       completed_lists.append(completed_list['list_id'])
+    for card in cards :
+       if card['dueComplete']  :
+           time = str(card['dateLastActivity'])
+           card['dateLastActivity'] =datetime.strptime( time, '%Y-%m-%dT%H:%M:%S.%fZ')- timedelta(hours=7)
+           completed.append(card)
+       elif card['idList'] in completed_lists :
+          time = str(card['dateLastActivity'])
+          card['dateLastActivity'] =datetime.strptime( time, '%Y-%m-%dT%H:%M:%S.%fZ')- timedelta(hours=7)
+          completed.append(card)
+    return(completed)

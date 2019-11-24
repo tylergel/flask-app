@@ -77,7 +77,7 @@
                     <div class = "row">
                       {% for badge in badges %}
                       <div class="col-md-2" {% if badge['completed'] == 0 %}style = "opacity: .5"{% endif %}>
-                        <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}">
+                        <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}"  style = "color: {{badge['color']}}">
                           <i class="fa fa-circle fa-stack-2x"></i>
                           <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
                         </span>
@@ -93,6 +93,26 @@
                     <div class="text-danger text-center mt-2"><h1>{{points}}</h1></div>
                   </div>
                 </div>
+              </div>
+              <div class = "row mt-3">
+                <table class="table">
+                  <thead>
+                    <tr class = "table-info">
+                      <th>Feed</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                  <tbody>
+                    {% for item in feed %}
+                      <tr class = "table-success">
+                        <td>{{item[0]}}</td>
+                        <td>{{item[1]}}</td>
+                        <td>{{item[2]}}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
               </div>
             </div>
           </body>

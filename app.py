@@ -36,7 +36,8 @@ def mainRender():
         return redirect(url_for("auth.login"))
     if session.get('trello') == "" or session.get('trello') is None:
         return redirect(url_for("profiles.profile"))
-    cards = main.cardsAssigned(main.getAllCards())
+    allcards = main.getAllCards()
+    cards = main.cardsAssigned(allcards)
     completed = main.cardsCompleted(cards)
     totalcards = len(cards)
     opencards = totalcards-completed
@@ -45,10 +46,37 @@ def mainRender():
     userData = db.getUser(session.get('user_id'))
     points = db.getPointsOfUser(session.get('user_id'))
     users=db.getUsers()
+    recentCompletedCards = main.cardsCompletedList(allcards)
+    recentCompletedCards.sort(key = lambda recentCompletedCards: recentCompletedCards['dateLastActivity'])
+    recentCompletedBadges = db.getRecentBadges()
+    totallist=recentCompletedCards + recentCompletedBadges
+    totallist.sort(key = lambda totallist: totallist['dateLastActivity'])
+    feed = []
+    i = 0
+    members = main.getAllMembers()
+    totallist.reverse()
+    for item in totallist :
+        i = i + 1
+        if i > 25 :
+            break
+        newitem = []
+        newitem.append(item['name'])
+        if 'username' in item :
+            newitem.append(item['username'])
+        else :
+            this_username = ""
+            for trellomember in item['idMembers'] :
+                for member in members :
+                    if trellomember == member['id'] :
+                        this_username = this_username + member['username'] +", "
+            this_username = this_username[:-3]
+            newitem.append(this_username)
+        newitem.append(item['dateLastActivity'])
+        feed.append(newitem)
     for index, user in enumerate(users) :
         users[index]['rank'] = (index + 1)
-    members = main.getAllMembers()
-    return render_template('/main/main.html', allusers=users, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('user'))
+
+    return render_template('/main/main.html', feed=feed,test=totallist, allusers=users, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('user'))
 
 @app.route('/')
 def mainRenderHome():
@@ -67,21 +95,28 @@ def deleteBadge():
     db = database.Database()
     badge_id = request.args.get('data', 0, type=str)
     db.deleteBadge(badge_id)
-    return redirect(url_for('delete'))
+    return redirect('/admin')
 
 @app.route('/deleteboard')
 def deleteBoard():
     db = database.Database()
     board_id = request.args.get('data', 0, type=str)
     db.deleteBoard(board_id)
-    return redirect(url_for('delete'))
+    return redirect('/admin')
 
 @app.route('/deletelist')
 def deleteList():
     db = database.Database()
     list_id = request.args.get('data', 0, type=str)
     db.deleteList(list_id)
-    return redirect(url_for('delete'))
+    return redirect('/admin')
+
+@app.route('/clearuserbadges')
+def clearBadgesFromUser():
+    db = database.Database()
+    userid = request.args.get('user_id')
+    db.clearBadgesFromUser(userid)
+    return redirect('/admin')
 
 @app.route('/addbadge')
 def addBadge():
@@ -90,7 +125,8 @@ def addBadge():
     name = request.args.get('name')
     points = request.args.get('points')
     description = request.args.get('description')
-    db.addBadge(icon, name, points, description)
+    color = request.args.get('color')
+    db.addBadge(icon, name, points, description, color)
     return redirect('/admin')
 
 @app.route('/addlist')
@@ -115,10 +151,11 @@ def addBoard():
     db.addBoard(boardid)
     return redirect('/admin')
 
+
 @app.route('/addbadgetouser')
 def addBadgeToUser():
     db = database.Database()
     userid = request.args.get('userid')
     badgeid = request.args.get('badgeid')
     db.addBadgeToUser(userid, badgeid)
-    return redirect('/admin')
+    return redirect('/admin?user_id='+userid)

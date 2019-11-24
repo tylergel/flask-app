@@ -22,7 +22,6 @@ class Database:
         user = os.environ.get('user')
         password=os.environ.get('password')
         db=os.environ.get('db')
-
         self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
                                    DictCursor)
         self.cur = self.con.cursor()
@@ -46,6 +45,10 @@ class Database:
         self.cur.execute("SELECT * FROM badges")
         result = self.cur.fetchall()
         return result
+    def getRecentBadges(self):
+        self.cur.execute("SELECT * FROM user_badges INNER JOIN badges ON user_badges.badge_id INNER JOIN users on user_badges.account_id=users.id Order by user_badges.dateLastActivity DESC")
+        result = self.cur.fetchall()
+        return result
     def getUser(self, userid):
         self.cur.execute("SELECT * FROM users WHERE id = "+str(userid))
         result = self.cur.fetchall()
@@ -65,7 +68,8 @@ class Database:
         result = self.cur.fetchall()
         return result
     def deleteBadge(self, badge_id):
-        self.cur.execute("DELETE FROM badges WHERE ID = "+badge_id)
+        self.cur.execute("DELETE FROM badges WHERE ID = "+str(badge_id))
+        self.cur.execute("DELETE FROM user_badges WHERE badge_id = "+str(badge_id))
         return ""
     def deleteBoard(self, board_id):
         self.cur.execute("DELETE FROM company_boards WHERE id = "+board_id)
@@ -73,8 +77,11 @@ class Database:
     def deleteList(self, list_id):
         self.cur.execute("DELETE FROM completed_lists WHERE id = "+list_id)
         return ""
-    def addBadge(self, icon, name, points, description):
-        self.cur.execute("INSERT INTO badges (icon, name, points, description) VALUES ('"+icon+"', '"+name+"', '"+points+"', '"+description+"')")
+    def clearBadgesFromUser(self, userid):
+        self.cur.execute("DELETE FROM user_badges WHERE account_id = "+userid)
+        return ""
+    def addBadge(self, icon, name, points, description, color):
+        self.cur.execute("INSERT INTO badges (icon, name, points, description, color) VALUES ('"+icon+"', '"+name+"', '"+points+"', '"+description+"', '"+color+"')")
         return ""
     def addList(self, name, list_id):
         self.cur.execute("INSERT INTO completed_lists (name, list_id) VALUES ('"+name+"', '"+list_id+"')")
