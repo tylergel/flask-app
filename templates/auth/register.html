@@ -1,9 +1,14 @@
-    {% include 'base.html' %}
-{% block header %}
-    <h1>{% block title %}{% endblock %}</h1>
-{% endblock %}
+ <body id="page-top">
 
-{% block content %}
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'sidebar.html' %}
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+    {% include 'header.html' %}
+    <div class="container-fluid">
 
     <div class="login-form">
         <form method="post">
@@ -22,4 +27,8 @@
             </div>
         </form>
     </div>
-{% endblock %}
+</div>
+</div>
+</div>
+</div>
+</body>

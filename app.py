@@ -32,21 +32,29 @@ def start():
 
 @app.route('/main')
 def mainRender():
+
     if session.get('user_id') is None:
         return redirect(url_for("auth.login"))
     if session.get('trello') == "" or session.get('trello') is None:
         return redirect(url_for("profiles.profile"))
+    db = database.Database()
+    # Header stuff
+    notifications = main.getNotifications()
+    messages = main.getMessages()
+    userData = db.getUser(session.get('user_id'))
+    users=db.getUsers()
+    #End header stuff
     allcards = main.getAllCards()
     cards = main.cardsAssigned(allcards)
     completed = main.cardsCompleted(cards)
     totalcards = len(cards)
     opencards = totalcards-completed
-    db = database.Database()
+    
     badges = db.userBadges(session.get('user_id'))
-    userData = db.getUser(session.get('user_id'))
     points = db.getPointsOfUser(session.get('user_id'))
     users=db.getUsers()
     recentCompletedCards = main.cardsCompletedList(allcards)
+    weeklycards, dates = main.getWeeklyCards(recentCompletedCards)
     recentCompletedCards.sort(key = lambda recentCompletedCards: recentCompletedCards['dateLastActivity'])
     recentCompletedBadges = db.getRecentBadges()
     totallist=recentCompletedCards + recentCompletedBadges
@@ -76,11 +84,67 @@ def mainRender():
     for index, user in enumerate(users) :
         users[index]['rank'] = (index + 1)
 
-    return render_template('/main/main.html', feed=feed,test=totallist, allusers=users, members=members, points = points, users = userData, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('user'))
+    return render_template('/main/index.html', users = userData,  messages=messages,notifications=notifications, dates=dates, weeklycards=weeklycards,feed=feed,test=totallist, allusers=users, members=members, points = points, badges=badges, cards=cards, completed=completed, totalcards=totalcards, opencards=opencards, username=session.get('user'))
+
+@app.route('/cards')
+def cards():
+    if session.get('user_id') is None:
+        return redirect(url_for("auth.login"))
+    if session.get('trello') == "" or session.get('trello') is None:
+        return redirect(url_for("profiles.profile"))
+    db = database.Database()
+    # Header stuff
+    notifications = main.getNotifications()
+    messages = main.getMessages()
+    userData = db.getUser(session.get('user_id'))
+    users=db.getUsers()
+    #End header stuff
+
+    card_type = request.args.get('card_type', default='', type=str)
+
+    cards_return = []
+    allcards = main.getAllCards()
+    allcards = main.cardsAssigned(allcards)
+    if card_type == 'total' :
+        cards_return = allcards
+    elif card_type == 'completed' :
+        cards_return = main.cardsCompletedList(allcards)
+    elif card_type == 'open' :
+        cards_return = main.getOpenCards(allcards)
+        
+
+    
+    users=db.getUsers()
+    recentCompletedCards = main.cardsCompletedList(allcards)
+    weeklycards, dates = main.getWeeklyCards(recentCompletedCards)
+
+    return render_template('/main/cards.html', card_type=card_type, users = userData,  messages=messages,notifications=notifications, dates=dates, weeklycards=weeklycards, allusers=users, cards=cards_return, username=session.get('user'))
 
 @app.route('/')
 def mainRenderHome():
     return mainRender()
+
+@app.route('/leaderboards')
+def leaderboards() :
+    if session.get('user_id') is None:
+        return redirect(url_for("auth.login"))
+    if session.get('trello') == "" or session.get('trello') is None:
+        return redirect(url_for("profiles.profile"))
+
+    db = database.Database()
+    # Header stuff
+    notifications = main.getNotifications()
+    messages = main.getMessages()
+    userData = db.getUser(session.get('user_id'))
+    users=db.getUsers()
+    #End header stuff
+
+    for index, user in enumerate(users) :
+        users[index]['rank'] = (index + 1)
+   
+
+    return render_template('/main/leaderboards.html', users = userData, notifications=notifications, messages=messages, allusers=users)
+
 
 @app.route('/challenges')
 def challengesRender():

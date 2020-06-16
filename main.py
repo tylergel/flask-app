@@ -39,6 +39,57 @@ def getAllCards() :
          cards.append(card)
  return cards
 
+def getOpenCards(allcards) :
+  lists = database.Database().getCompletedLists()
+  completed_lists = []
+  for completed_list in lists :
+      completed_lists.append(completed_list['list_id'])
+
+  cards = []
+  for card in allcards :
+    if card['idList'] in completed_lists :
+      donothing = True
+    else :
+      cards.append(card)
+  return cards
+
+
+def getWeeklyCards(cards) :
+  today = datetime.today()
+  first = datetime.today() - timedelta(days=today.weekday(), weeks=1)
+  second = first -timedelta(days=today.weekday(), weeks=1)
+  third = second -timedelta(days=today.weekday(), weeks=1)
+  forth = third -timedelta(days=today.weekday(), weeks=1)
+
+  weeklyListFirst = []
+  weeklyListSecond = []
+  weeklyListThird = []
+  weeklyListFourth = []
+
+  for card in cards :
+    if card['dateLastActivity'] > first :
+      weeklyListFirst.append(card)
+    elif card['dateLastActivity'] > second :
+      weeklyListSecond.append(card) 
+    elif card['dateLastActivity'] > third :
+      weeklyListSecond.append(card) 
+    elif card['dateLastActivity'] > forth :
+      weeklyListSecond.append(card) 
+
+  weeks = []
+  weeks.append(weeklyListFirst)
+  weeks.append(weeklyListSecond)
+  weeks.append(weeklyListThird)
+  weeks.append(weeklyListFourth)
+
+  dates = []
+  dates.append(first.strftime("%B %d, %Y"))
+  dates.append(second.strftime("%B %d, %Y"))
+  dates.append(third.strftime("%B %d, %Y"))
+  dates.append(forth.strftime("%B %d, %Y"))
+
+  return weeks, dates
+
 def cardsAssigned(cards) :
   cardsAssigned = [];
   for card in cards :
@@ -69,6 +120,13 @@ def cardsCompleted(cards) :
           completed += 1
   return(completed)
 
+def getNotifications() :
+  notifications = database.Database().getNotifications(session.get('user_id'))
+  return notifications
+
+def getMessages() :
+  notifications = database.Database().getMessages(session.get('user_id'))
+  return notifications
 def cardsCompletedList(cards) :
     completed  = []
     lists = database.Database().getCompletedLists()

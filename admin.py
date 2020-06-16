@@ -25,8 +25,12 @@ def adminRender():
         return redirect(url_for("profiles.profile"))
     db = database.Database()
     badges = db.getBadges()
+    # Header stuff
+    notifications = main.getNotifications()
+    messages = main.getMessages()
     userData = db.getUser(session.get('user_id'))
-    users = db.getUsers()
+    users=db.getUsers()
+    #End header stuff
     points = db.getPointsOfUser(session.get('user_id'))
     boards = db.getBoards()
     lists = main.getLists()
@@ -37,4 +41,4 @@ def adminRender():
     for user in users :
         if user_id == str(user['id']) :
             currentuser = user
-    return render_template('/admin/admin.html', points_distribution=points_distribution, currentuser=currentuser, completed_lists=completed_lists, lists=lists, boards=boards,trellousername=session.get('trellousername'), badges=badges, users=userData, allusers=users, points=points)
+    return render_template('/admin/admin.html', messages=messages, notifications=notifications, points_distribution=points_distribution, currentuser=currentuser, completed_lists=completed_lists, lists=lists, boards=boards,trellousername=session.get('trellousername'), badges=badges, users=userData, allusers=users, points=points)

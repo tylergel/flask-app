@@ -18,10 +18,14 @@ import os
 
 class Database:
     def __init__(self):
-        host = os.environ.get('host')
-        user = os.environ.get('user')
-        password=os.environ.get('password')
-        db=os.environ.get('db')
+        # host = os.environ.get('host')
+        # user = os.environ.get('user')
+        # password=os.environ.get('password')
+        # db=os.environ.get('db')
+        host = "107.180.27.226"
+        user = "tylergel"
+        password = "tylergel"
+        db = "gammification"
         self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
                                    DictCursor)
         self.cur = self.con.cursor()
@@ -118,6 +122,20 @@ class Database:
         return result[0]['token']
     def getCompletedLists(self) :
         self.cur.execute("SELECT * from completed_lists")
+        result = self.cur.fetchall()
+        return result
+    def getNotifications(self, user_id) :
+        self.cur.execute("SELECT * from notifications WHERE user_id = '"+str(user_id)+"'")
+        result = self.cur.fetchall()
+        return result
+
+    def getMessages(self, user_id) :
+        self.cur.execute("SELECT * from messages WHERE user_id = '"+str(user_id)+"'")
+        result = self.cur.fetchall()
+        return result
+
+    def getMessages(self, user_id) :
+        self.cur.execute("SELECT * from messages WHERE user_id = '"+str(user_id)+"'")
         result = self.cur.fetchall()
         return result
     def getPointsOfUser(self, userid) :
