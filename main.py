@@ -136,10 +136,17 @@ def cardsCompletedList(cards) :
     for card in cards :
        if card['dueComplete']  :
            time = str(card['dateLastActivity'])
-           card['dateLastActivity'] =datetime.strptime( time, '%Y-%m-%dT%H:%M:%S.%fZ')- timedelta(hours=7)
+           try:
+           	card['dateLastActivity'] =datetime.strptime( time, '%Y-%m-%dT%H:%M:%S.%fZ')- timedelta(hours=7)
+           except :
+           	what = 'what'
+           
            completed.append(card)
        elif card['idList'] in completed_lists :
           time = str(card['dateLastActivity'])
-          card['dateLastActivity'] =datetime.strptime( time, '%Y-%m-%dT%H:%M:%S.%fZ')- timedelta(hours=7)
+          try:
+          	card['dateLastActivity'] =datetime.strptime( time, '%Y-%m-%dT%H:%M:%S.%fZ')- timedelta(hours=7)
+          except :
+           	what = 'what'
           completed.append(card)
     return(completed)
