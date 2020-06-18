@@ -39,7 +39,12 @@ def register():
                 "INSERT INTO users (username, password) VALUES ('"+username+"', '"+generate_password_hash(password)+"')"
             )
             # come back to this; db.commit()
-            return redirect(url_for('auth.login'))
+            user = db.select(
+                "SELECT * FROM users WHERE username = '{}'".format(username)
+            )
+            session.clear()  # stores user data into an encrypted cookie
+            session['user_id'] = user['id']
+            return redirect(url_for('mainRender'))
 
         flash(error)
 

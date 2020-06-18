@@ -12,6 +12,7 @@
 
     <div class="login-form">
         <form method="post">
+            <a href="{{ url_for('auth.register') }}"><h1 class = "text-center text-danger">Register a new account to test with your own trello boards. Otherwise login below.</h1></a>
             <h2 class="text-center">Log in </h2>
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Username" value="admin" id="username" name="username" required="required">
