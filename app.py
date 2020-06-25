@@ -49,15 +49,19 @@ def mainRender():
     completed = main.cardsCompleted(cards)
     totalcards = len(cards)
     opencards = totalcards-completed
-    
+
     badges = db.userBadges(session.get('user_id'))
-    points = db.getPointsOfUser(session.get('user_id'))
+    points = 0
+    try :
+        points = db.getPointsOfUser(session.get('user_id'))
+    except :
+        print("")
     users=db.getUsers()
     recentCompletedCards = main.cardsCompletedList(allcards)
     weeklycards, dates = main.getWeeklyCards(recentCompletedCards)
     recentCompletedCards.sort(key = lambda recentCompletedCards: recentCompletedCards['dateLastActivity'])
     recentCompletedBadges = db.getRecentBadges()
-    totallist=recentCompletedCards + recentCompletedBadges
+    totallist= list(recentCompletedCards) + list(recentCompletedBadges)
     totallist.sort(key = lambda totallist: totallist['dateLastActivity'])
     feed = []
     i = 0
@@ -111,9 +115,9 @@ def cards():
         cards_return = main.cardsCompletedList(allcards)
     elif card_type == 'open' :
         cards_return = main.getOpenCards(allcards)
-        
 
-    
+
+
     users=db.getUsers()
     recentCompletedCards = main.cardsCompletedList(allcards)
     weeklycards, dates = main.getWeeklyCards(recentCompletedCards)
@@ -141,7 +145,7 @@ def leaderboards() :
 
     for index, user in enumerate(users) :
         users[index]['rank'] = (index + 1)
-   
+
 
     return render_template('/main/leaderboards.html', users = userData, notifications=notifications, messages=messages, allusers=users)
 

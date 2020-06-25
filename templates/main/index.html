@@ -39,7 +39,7 @@
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-            
+
           </div>
 
           <!-- Content Row -->
@@ -99,7 +99,7 @@
 	              </div>
 	          </a>
             </div>
-            
+
 
             <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
@@ -110,11 +110,11 @@
                       <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ (completed/totalcards*100)|round(2) }}%</div>
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{% if totalcards == 0 %}0{% else %}{{ (completed/totalcards*100)|round(2) }}{% endif %}%</div>
                         </div>
                         <div class="col">
                           <div class="progress progress-sm mr-2">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ (completed/totalcards*100)|round(2) }}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {% if totalcards == 0 %}0{% else %}{{ (completed/totalcards*100)|round(2) }}{% endif %}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                         </div>
                       </div>
@@ -128,7 +128,7 @@
             </div>
 
             <!-- Pending Requests Card Example -->
-            
+
           </div>
 
           <!-- Content Row -->
@@ -200,7 +200,7 @@
                 </div>
               </div>
             </div>
-                
+
                 <div class="col-xl-3 col-lg-3 col-md-6 mb-4">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
@@ -291,7 +291,7 @@
                 </table>
 
                 </div>
-                
+
               </div>
 
 
@@ -493,7 +493,7 @@ var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
     labels: ["{{dates[3]}}", "{{dates[2]}}", "{{dates[1]}}", "{{dates[0]}}"],
-    datasets: [{ 
+    datasets: [{
         data: ["{{weeklycards[3]|length}}","{{weeklycards[2]|length}}","{{weeklycards[1]|length}}","{{weeklycards[0]|length}}"],
         label: "Cards Completed",
         borderColor: "#3e95cd",
