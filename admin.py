@@ -31,11 +31,19 @@ def adminRender():
     userData = db.getUser(session.get('user_id'))
     users=db.getUsers()
     #End header stuff
-    points = db.getPointsOfUser(session.get('user_id'))
+    points = 0
+    try :
+        points = db.getPointsOfUser(session.get('user_id'))
+    except :
+        print("")
     boards = db.getBoards()
     lists = main.getLists()
     completed_lists = db.getCompletedLists()
-    points_distribution = db.getPointsDistribution()
+    points_distribution = []
+    try :
+        points_distribution = db.getPointsDistribution()
+    except:
+        print("")
     currentuser = []
     user_id = request.args.get('user_id')
     for user in users :

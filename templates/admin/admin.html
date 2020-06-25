@@ -1,372 +1,373 @@
- <body id="page-top">
+<body id="page-top">
 
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-    {% include 'sidebar.html' %}
-    <div id="content-wrapper" class="d-flex flex-column">
+ <!-- Page Wrapper -->
+ <div id="wrapper">
+   {% include 'sidebar.html' %}
+   <div id="content-wrapper" class="d-flex flex-column">
 
-      <!-- Main Content -->
-      <div id="content">
-    {% include 'header.html' %}
-    <div class="container-fluid">
-            <div class = "container">
-              <div class = "row mt-3">
-              <div class = "card col-12">
-                <div class = "card-header">
-                  Boards to track
-                </div>
-                <div class = "card-body text-center">
-                  {% for board in boards %}
-                    <div class = "row">
-                      <i class="deleteboard text-danger fa fa-minus-circle fa-2x" data-boardid={{board[0]}}></i>
-                      <div class = "ml-3">  {{ board[1] }} </div>
-                    </div>
-                  {% endfor %}
-                    <div class = "row">
-                      <i class="addboard text-success fa fa-plus-circle fa-2x"></i>
-                      <div class = "ml-3"> <input type="text" class = "col-12" id="addboardid" placeholder="Board URL"  ></div>
-                    </div>
-                    <div class = "text-info">View your boards at https://trello.com/{{trellousername}}/boards</div>
-                </div>
-              </div>
-            </div>
-            <div class = "row">
-              <div class = "card col-lg-6 col-12 mt-3">
-                <div class = "card-header">
-                  Lists for completeness
-                </div>
-                <div class = "card-body">
-                  {% for completed_list in completed_lists %}
-                    <div class = "row">
-                      <i class="deletelist text-danger fa fa-minus-circle fa-2x" data-listid={{completed_list['id']}}></i>
-                      <div class = "card border col-4 bg-success text-center ml-2 text-white">{{completed_list['name']}}</div>
-                    </div>
-                  {% endfor %}
-                  <div class = "row">
-                    <i class="addlist text-success fa fa-plus-circle fa-2x"></i>
-                    <select id = "addlistname" class = "mt-2 ml-2">
-                      <option>Select a list to add</option>
-                      {% for list in lists %}
-                      <option value = {{list['id']}}>{{list['name']}}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class = "card col-lg-6 col-12 mt-3">
-                <div class = "card-header">
-                  Point distribution
-                </div>
-                <div class = "card-body text-center ">
-                  <div class = "row">
-                    Points each completed card count as: <input class = "ml-2 text-center" id = "ppc" type="text" value = {{points_distribution['ppc']}} placeholder="100 (points per card)">
-                  </div>
-                  <div class = "btn btn-primary mt-2" id = "update_points">Update</div>
-                </div>
-              </div>
-            </div>
-                <div class="card col-12 mt-3">
-                  <div class = "row card-header">
-                    <div class = "col-12">
-                        Badges
-                      <i class="fa fa-plus fa-2x pull-right" id = "showadd"></i>
-                    </div>
-                  </div>
-                  <div class = "row mt-2" id = "add" style = "display:none">
-                    <div class = "row text-center mt-2 mb-2 ml-5">
-                      <a href = "https://fontawesome.com/v4.7.0/icons/" target="_blank">Font awesome icons: https://fontawesome.com/v4.7.0/icons/</a>
-                    </div>
-                    <div class = "row">
-                      <div class = "col-3" >
-                        <input type="text" class="form-control" id = "icon" placeholder="Font awesome Icon Name">
-                      </div>
-                      <div class = "col-2">
-                        <input type="text" class="form-control" id = "name" placeholder="Badge Name">
-                      </div>
-                      <div class = "col-2">
-                        <input type="text" class="form-control" id = "points" placeholder="Points">
-                      </div>
-                      <div class = "col-2">
-                        <input type="text" class="form-control" id = "description" placeholder="Description">
-                      </div>
-                      <div class = "col-2">
-                        <select id="color">
-                          <option>Select color</option>
-                          <option value="black">Black</option>
-                          <option value="blue">Blue</option>
-                          <option value="green">Green</option>
-                          <option value="orange">Orange</option>
-                          <option value="red">Red</option>
-                          <option value="pink">Pink</option>
-                          <option value="purple">Purple</option>
-                          <option value="yellow">Yellow</option>
-                        </select>
-                      </div>
-                      <div class = "col-1">
-                        <i class="fa fa-plus-circle fa-2x" id = "addbadge"></i>
-                      </div>
-                    </div>
-                  </div>
+     <!-- Main Content -->
+     <div id="content">
+   {% include 'header.html' %}
+   <div class="container-fluid">
+           <div class = "container">
+             <div class = "row mt-3">
+             <div class = "card col-12">
+               <div class = "card-header">
+                 Boards to track
+               </div>
+               <div class = "card-body text-center">
+                 {% for board in boards %}
+                   <div class = "row">
+                     <i class="deleteboard text-danger fa fa-minus-circle fa-2x" data-boardid={{board[0]}}></i>
+                     <div class = "ml-3">  {{ board[1] }} </div>
+                   </div>
+                 {% endfor %}
+                   <div class = "row">
+                     <i class="addboard text-success fa fa-plus-circle fa-2x"></i>
+                     <div class = "ml-3"> <input type="text" class = "col-12" id="addboardid" placeholder="Board URL"  ></div>
+                   </div>
+                   <div class = "row text-info">View your boards at <a href = "https://trello.com/{{trellousername}}/boards" target="_blank">&nbsp https://trello.com/{{trellousername}}/boards</a></div>
+                   <div class = "row text-info">Then copy and past the board URL link above.</div>
+               </div>
+             </div>
+           </div>
+           <div class = "row">
+             <div class = "card col-lg-6 col-12 mt-3">
+               <div class = "card-header">
+                 Lists for completeness
+               </div>
+               <div class = "card-body">
+                 {% for completed_list in completed_lists %}
+                   <div class = "row">
+                     <i class="deletelist text-danger fa fa-minus-circle fa-2x" data-listid={{completed_list['id']}}></i>
+                     <div class = "card border col-4 bg-success text-center ml-2 text-white">{{completed_list['name']}}</div>
+                   </div>
+                 {% endfor %}
+                 <div class = "row">
+                   <i class="addlist text-success fa fa-plus-circle fa-2x"></i>
+                   <select id = "addlistname" class = "mt-2 ml-2">
+                     <option>Select a list to add</option>
+                     {% for list in lists %}
+                     <option value = {{list['id']}}>{{list['name']}}</option>
+                     {% endfor %}
+                   </select>
+                 </div>
+               </div>
+             </div>
+             <div class = "card col-lg-6 col-12 mt-3">
+               <div class = "card-header">
+                 Point distribution
+               </div>
+               <div class = "card-body text-center ">
+                 <div class = "row">
+                   Points each completed card count as: <input class = "ml-2 text-center" id = "ppc" type="text" value = {{points_distribution['ppc']}} placeholder="100 (points per card)">
+                 </div>
+                 <div class = "btn btn-primary mt-2" id = "update_points">Update</div>
+               </div>
+             </div>
+           </div>
+               <div class="card col-12 mt-3">
+                 <div class = "row card-header">
+                   <div class = "col-12">
+                       Badges
+                     <i class="fa fa-plus fa-2x pull-right" id = "showadd"></i>
+                   </div>
+                 </div>
+                 <div class = "row mt-2" id = "add" style = "display:none">
+                   <div class = "row text-center mt-2 mb-2 ml-5">
+                     <a href = "https://fontawesome.com/v4.7.0/icons/" target="_blank">Font awesome icons: https://fontawesome.com/v4.7.0/icons/</a>
+                   </div>
+                   <div class = "row">
+                     <div class = "col-3" >
+                       <input type="text" class="form-control" id = "icon" placeholder="Font awesome Icon Name">
+                     </div>
+                     <div class = "col-2">
+                       <input type="text" class="form-control" id = "name" placeholder="Badge Name">
+                     </div>
+                     <div class = "col-2">
+                       <input type="text" class="form-control" id = "points" placeholder="Points">
+                     </div>
+                     <div class = "col-2">
+                       <input type="text" class="form-control" id = "description" placeholder="Description">
+                     </div>
+                     <div class = "col-2">
+                       <select id="color">
+                         <option>Select color</option>
+                         <option value="black">Black</option>
+                         <option value="blue">Blue</option>
+                         <option value="green">Green</option>
+                         <option value="orange">Orange</option>
+                         <option value="red">Red</option>
+                         <option value="pink">Pink</option>
+                         <option value="purple">Purple</option>
+                         <option value="yellow">Yellow</option>
+                       </select>
+                     </div>
+                     <div class = "col-1">
+                       <i class="fa fa-plus-circle fa-2x" id = "addbadge"></i>
+                     </div>
+                   </div>
+                 </div>
 
-                {% for badge in badges %}
-                  <div class = "row">
-                    <div class = "col-3" >
-                      <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" style = "color: {{badge['color']}}">
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
-                      </span>
-                    </div>
-                    <div class = "col-2">
-                      {{badge['name']}}:
-                    </div>
-                    <div class = "col-2">
-                        {{badge['points']}}
-                    </div>
-                    <div class = "col-3">
-                        {{badge['description']}}
-                    </div>
-                    <div class = "col-2">
-                      <i class="deletebadge  fa fa-trash"  data-badgeid={{badge['id']}}></i>
-                    </div>
-                  </div>
-                {% endfor %}
-                </div>
-                <div class = "row">
-                <div class="col-12 col-lg-6 mt-3">
-                  <div class="card">
-                    <div class = "card-header text-center">
-                      Edit user rewards
-                    </div>
-                    <div class="card-body text-center">
-                      <div class="text-info">Choose a user below</div>
-                        <table class = "table">
-                          <thead>
-                            <tr >
-                              <th scope="col">Name</th>
-                              <th scope="col">Points</th>
+               {% for badge in badges %}
+                 <div class = "row">
+                   <div class = "col-3" >
+                     <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" style = "color: {{badge['color']}}">
+                       <i class="fa fa-circle fa-stack-2x"></i>
+                       <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
+                     </span>
+                   </div>
+                   <div class = "col-2">
+                     {{badge['name']}}:
+                   </div>
+                   <div class = "col-2">
+                       {{badge['points']}}
+                   </div>
+                   <div class = "col-3">
+                       {{badge['description']}}
+                   </div>
+                   <div class = "col-2">
+                     <i class="deletebadge  fa fa-trash"  data-badgeid={{badge['id']}}></i>
+                   </div>
+                 </div>
+               {% endfor %}
+               </div>
+               <div class = "row">
+               <div class="col-12 col-lg-6 mt-3">
+                 <div class="card">
+                   <div class = "card-header text-center">
+                     Edit user rewards
+                   </div>
+                   <div class="card-body text-center">
+                     <div class="text-info">Choose a user below</div>
+                       <table class = "table">
+                         <thead>
+                           <tr >
+                             <th scope="col">Name</th>
+                             <th scope="col">Points</th>
+                           </tr>
+                         </thead>
+                         <tbody>
+                           {% for user in allusers %}
+                            {% if user['username'] == currentuser['username'] %}
+                            <tr class = " table-success" style="cursor:pointer">{% else %}<tr  class = "changeuser" style="cursor:pointer" data-user={{user['id']}}>{% endif %}
+                              <td>{{user['username']}}</td>
+                              <td>{{user['points']}}</td>
                             </tr>
-                          </thead>
-                          <tbody>
-                            {% for user in allusers %}
-                             {% if user['username'] == currentuser['username'] %}
-                             <tr class = " table-success" style="cursor:pointer">{% else %}<tr  class = "changeuser" style="cursor:pointer" data-user={{user['id']}}>{% endif %}
-                               <td>{{user['username']}}</td>
-                               <td>{{user['points']}}</td>
-                             </tr>
-                            {% endfor %}
-                          </tbody>
-                        </table>
-                    </div>
-                  </div>
-              </div>
-              <div class="col-12 col-lg-6 mt-3">
-                <div class="card">
-                  <div class = "card-header text-center">
-                    Editing user: {{currentuser['username']}}
-                  </div>
-                  <div class="card-body text-center">
-                    {% if currentuser['username'] is defined %}{% else %}
-                    <div class = "row text-danger">
-                      Select a user to the left
-                    </div>
-                    {% endif %}
-                    <div class = "row text-center">
+                           {% endfor %}
+                         </tbody>
+                       </table>
+                   </div>
+                 </div>
+             </div>
+             <div class="col-12 col-lg-6 mt-3">
+               <div class="card">
+                 <div class = "card-header text-center">
+                   Editing user: {{currentuser['username']}}
+                 </div>
+                 <div class="card-body text-center">
+                   {% if currentuser['username'] is defined %}{% else %}
+                   <div class = "row text-danger">
+                     Select a user to the left
+                   </div>
+                   {% endif %}
+                   <div class = "row text-center">
 
-                      <h4 class = "text-info">Total points: {{ currentuser['points'] }}<h4>
-                      </div>
-                    <div class = "row">
-                      <input type = "text" style = "display:none" id = "gettingid" value = "{{currentuser['id']}}">
-                      <div class = "col-4">
-                        User's badges:
-                        </div>
-                      <div class = "col-8">
-                        {% for badge in currentuser['badges'] %}
-                         <span class="fa-stack has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}"  style = "color: {{badge['color']}}">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
-                          </span>
-                          {% endfor %}
-                        </div>
-                          <div class = "row">
-                            <div class = "col-10 offset-1">
-                              <label class = "col-8" for="addbadge">Add badge to user</label>
-                              <select class="col-8" id="addbadgeselect">
-                                <option>Choose badge</option>
-                                {% for badge in badges %}
-                                  <option value = {{badge['id']}}>{{badge['name']}}</option>
-                                  {% endfor %}
-                              </select>
-                              <button id = "addbadgetouser" class = " col-4 btn btn-primary mt-2">Add Badge</button>
-                              <button id = "clearuserbadges" class = " col-12 btn btn-danger mt-2">Clear Badges from user</button>
-                            </div>
-                            </div>
-                        </div>
-                      </div>
-                  </div>
-                </div>
-            </div>
-            </div>
+                     <h4 class = "text-info">Total points: {{ currentuser['points'] }}<h4>
+                     </div>
+                   <div class = "row">
+                     <input type = "text" style = "display:none" id = "gettingid" value = "{{currentuser['id']}}">
+                     <div class = "col-4">
+                       User's badges:
+                       </div>
+                     <div class = "col-8">
+                       {% for badge in currentuser['badges'] %}
+                        <span class="fa-stack has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}"  style = "color: {{badge['color']}}">
+                           <i class="fa fa-circle fa-stack-2x"></i>
+                           <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
+                         </span>
+                         {% endfor %}
+                       </div>
+                         <div class = "row">
+                           <div class = "col-10 offset-1">
+                             <label class = "col-8" for="addbadge">Add badge to user</label>
+                             <select class="col-8" id="addbadgeselect">
+                               <option>Choose badge</option>
+                               {% for badge in badges %}
+                                 <option value = {{badge['id']}}>{{badge['name']}}</option>
+                                 {% endfor %}
+                             </select>
+                             <button id = "addbadgetouser" class = " col-4 btn btn-primary mt-2">Add Badge</button>
+                             <button id = "clearuserbadges" class = " col-12 btn btn-danger mt-2">Clear Badges from user</button>
+                           </div>
+                           </div>
+                       </div>
+                     </div>
+                 </div>
+               </div>
+           </div>
+           </div>
 
-                <div class="card col-12 col-lg-8 mt-3">
-                  {% for challenge in challenges %}
-                    <div class = "row">
-                      <div class = "col-4" >
-                        <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}" {% if badge['completed'] == 0 %}style = "opacity: .5"{% endif %}>
-                          <i class="fa fa-circle fa-stack-2x"></i>
-                          <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
-                        </span>
-                      </div>
-                      <div class = "col-4">
-                        {{badge['name']}}:
-                        </div>
-                        <div class = "col-4">
-                            {{badge['points']}}
-                          </div>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-        </div>
-        </div>
-        </div>
-        </div>
-          </body>
-          {{result}}
+               <div class="card col-12 col-lg-8 mt-3">
+                 {% for challenge in challenges %}
+                   <div class = "row">
+                     <div class = "col-4" >
+                       <span class="fa-stack fa-2x has-badge" data-toggle="tooltip" data-placement="top" title="{{badge['description']}}" {% if badge['completed'] == 0 %}style = "opacity: .5"{% endif %}>
+                         <i class="fa fa-circle fa-stack-2x"></i>
+                         <i class="fa fa-{{badge['icon']}} fa-stack-1x fa-inverse"></i>
+                       </span>
+                     </div>
+                     <div class = "col-4">
+                       {{badge['name']}}:
+                       </div>
+                       <div class = "col-4">
+                           {{badge['points']}}
+                         </div>
+                   </div>
+                 {% endfor %}
+               </div>
+             </div>
+       </div>
+       </div>
+       </div>
+       </div>
+         </body>
+         {{result}}
 </html>
 <script type=text/javascript>
 
 $( "#showadd" ).click(function() {
-  $( "#add" ).show();
+ $( "#add" ).show();
 });
-  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-  $(function() {
-      $('.deletebadge').bind('click', function() {
-        $.getJSON($SCRIPT_ROOT + '/deletebadge', {
-          data: $(this).data('badgeid')
-        }, function(data) {
-          window.location.replace("/admin");
-        });
-        window.location.replace("/admin");
-        return false;
-      });
-    });
+ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+ $(function() {
+     $('.deletebadge').bind('click', function() {
+       $.getJSON($SCRIPT_ROOT + '/deletebadge', {
+         data: $(this).data('badgeid')
+       }, function(data) {
+         window.location.replace("/admin");
+       });
+       window.location.replace("/admin");
+       return false;
+     });
+   });
 
-    $(function() {
-        $('#addbadge').bind('click', function() {
-          $.getJSON($SCRIPT_ROOT + '/addbadge', {
-            icon: $("#icon").val(),
-            name: $("#name").val(),
-            points: $("#points").val(),
-            description: $("#description").val(),
-            color: $("#color").val(),
+   $(function() {
+       $('#addbadge').bind('click', function() {
+         $.getJSON($SCRIPT_ROOT + '/addbadge', {
+           icon: $("#icon").val(),
+           name: $("#name").val(),
+           points: $("#points").val(),
+           description: $("#description").val(),
+           color: $("#color").val(),
 
-          }, function(data) {
-            window.location.replace("/admin");
-          });
-          window.location.replace("/admin");
-          return false;
-        });
-      });
+         }, function(data) {
+           window.location.replace("/admin");
+         });
+         window.location.replace("/admin");
+         return false;
+       });
+     });
 
-      $(function() {
-          $('#addbadgetouser').bind('click', function() {
-            userid =$("#gettingid").val(),
-            $.getJSON($SCRIPT_ROOT + '/addbadgetouser', {
-              userid: userid,
-              badgeid: $("#addbadgeselect"). children("option:selected"). val()
-            }, function(data) {
-              window.location.replace("/admin?user_id"+userid);
-            });
-            window.location.replace("/admin?user_id="+userid);
-            return false;
-          });
-        });
+     $(function() {
+         $('#addbadgetouser').bind('click', function() {
+           userid =$("#gettingid").val(),
+           $.getJSON($SCRIPT_ROOT + '/addbadgetouser', {
+             userid: userid,
+             badgeid: $("#addbadgeselect"). children("option:selected"). val()
+           }, function(data) {
+             window.location.replace("/admin?user_id"+userid);
+           });
+           window.location.replace("/admin?user_id="+userid);
+           return false;
+         });
+       });
 
-        $(function() {
-            $('.deleteboard').bind('click', function() {
-              $.getJSON($SCRIPT_ROOT + '/deleteboard', {
-                data: $(this).data('boardid')
+       $(function() {
+           $('.deleteboard').bind('click', function() {
+             $.getJSON($SCRIPT_ROOT + '/deleteboard', {
+               data: $(this).data('boardid')
 
-              }, function(data) {
-                window.location.replace("/admin");
-              });
-              window.location.replace("/admin");
-              return false;
-            });
-          });
+             }, function(data) {
+               window.location.replace("/admin");
+             });
+             window.location.replace("/admin");
+             return false;
+           });
+         });
 
-          $(function() {
-              $('.deletelist').bind('click', function() {
-                $.getJSON($SCRIPT_ROOT + '/deletelist', {
-                  data: $(this).data('listid')
+         $(function() {
+             $('.deletelist').bind('click', function() {
+               $.getJSON($SCRIPT_ROOT + '/deletelist', {
+                 data: $(this).data('listid')
 
-                }, function(data) {
-                  window.location.replace("/admin");
-                });
-                window.location.replace("/admin");
-                return false;
-              });
-            });
+               }, function(data) {
+                 window.location.replace("/admin");
+               });
+               window.location.replace("/admin");
+               return false;
+             });
+           });
 
-            $(function() {
-                $('.addboard').bind('click', function() {
-                  $.getJSON($SCRIPT_ROOT + '/addboard', {
-                    boardid: $("#addboardid").val(),
-                  }, function(data) {
-                    window.location.replace("/admin");
-                  });
-                  window.location.replace("/admin");
-                  return false;
-                });
-              });
+           $(function() {
+               $('.addboard').bind('click', function() {
+                 $.getJSON($SCRIPT_ROOT + '/addboard', {
+                   boardid: $("#addboardid").val(),
+                 }, function(data) {
+                   window.location.replace("/admin");
+                 });
+                 window.location.replace("/admin");
+                 return false;
+               });
+             });
 
-              $(function() {
-                  $('.addlist').bind('click', function() {
-                    $.getJSON($SCRIPT_ROOT + '/addlist', {
-                      listname: $("#addlistname option:selected").text(),
-                      listid: $("#addlistname option:selected").val(),
-                    }, function(data) {
-                      window.location.replace("/admin");
-                    });
-                    window.location.replace("/admin");
-                    return false;
-                  });
-                });
+             $(function() {
+                 $('.addlist').bind('click', function() {
+                   $.getJSON($SCRIPT_ROOT + '/addlist', {
+                     listname: $("#addlistname option:selected").text(),
+                     listid: $("#addlistname option:selected").val(),
+                   }, function(data) {
+                     window.location.replace("/admin");
+                   });
+                   window.location.replace("/admin");
+                   return false;
+                 });
+               });
 
-                $(function() {
-                    $('#update_points').bind('click', function() {
-                      $.getJSON($SCRIPT_ROOT + '/addpointsdist', {
-                        ppc: $("#ppc").val(),
-                      }, function(data) {
-                        window.location.replace("/admin");
-                      });
-                      window.location.replace("/admin");
-                      return false;
-                    });
-                  });
+               $(function() {
+                   $('#update_points').bind('click', function() {
+                     $.getJSON($SCRIPT_ROOT + '/addpointsdist', {
+                       ppc: $("#ppc").val(),
+                     }, function(data) {
+                       window.location.replace("/admin");
+                     });
+                     window.location.replace("/admin");
+                     return false;
+                   });
+                 });
 
 $(function() {
-    $('.changeuser').bind('click', function() {
-      user_id= $(this).data('user');
-      $.getJSON($SCRIPT_ROOT + '/admin', {
-        user_id: user_id,
-      }, function(data) {
-        window.location.replace("/admin?user_id="+user_id);
-      });
-      window.location.replace("/admin?user_id="+user_id);
-      return false;
-    });
-  });
-  $(function() {
-  $('#clearuserbadges').bind('click', function() {
-    userid =$("#gettingid").val();
-    $.getJSON($SCRIPT_ROOT + '/clearuserbadges', {
-      user_id: userid,
-    }, function(data) {
-      window.location.replace("/admin?user_id="+userid);
-    });
-    window.location.replace("/admin?user_id="+userid);
-    return false;
-  });
+   $('.changeuser').bind('click', function() {
+     user_id= $(this).data('user');
+     $.getJSON($SCRIPT_ROOT + '/admin', {
+       user_id: user_id,
+     }, function(data) {
+       window.location.replace("/admin?user_id="+user_id);
+     });
+     window.location.replace("/admin?user_id="+user_id);
+     return false;
+   });
+ });
+ $(function() {
+ $('#clearuserbadges').bind('click', function() {
+   userid =$("#gettingid").val();
+   $.getJSON($SCRIPT_ROOT + '/clearuserbadges', {
+     user_id: userid,
+   }, function(data) {
+     window.location.replace("/admin?user_id="+userid);
+   });
+   window.location.replace("/admin?user_id="+userid);
+   return false;
+ });
 });
-                  </script>
+                 </script>
